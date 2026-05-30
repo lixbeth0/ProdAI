@@ -1,0 +1,20 @@
+
+/* CONTENIDO NORMAL */
+.dashboard-content {
+
+  margin-left: 260px;
+
+  width: calc(100% - 260px);
+
+  min-height: 100vh;
+
+  transition: all 0.3s ease;
+}
+
+/* CONTENIDO COLAPSADO */
+.dashboard-content.collapsed {
+
+  margin-left: 90px;
+
+  width: calc(100% - 90px);
+}

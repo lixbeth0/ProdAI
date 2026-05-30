@@ -1,0 +1,58 @@
+query ListAllHabits @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  habits {
+    id
+    name
+    category
+    description
+    goalUnit
+    targetValue
+    frequency
+    createdAt
+    user {
+      id
+      username
+    }
+  }
+}
+
+mutation CreateNewGoal($habitId: UUID!, $name: String!, $targetValue: Int!, $targetUnit: String!, $startDate: Date!, $endDate: Date!, $status: String!, $description: String) @auth(level: USER) {
+  goal_insert(data: {
+    userId_expr: "auth.uid",
+    habitId: $habitId,
+    name: $name,
+    targetValue: $targetValue,
+    targetUnit: $targetUnit,
+    startDate: $startDate,
+    endDate: $endDate,
+    status: $status,
+    description: $description,
+    createdAt_expr: "request.time"
+  })
+}
+
+query GetMyGoals @auth(level: USER) {
+  goals(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    name
+    targetValue
+    targetUnit
+    startDate
+    endDate
+    status
+    habit {
+      name
+      category
+    }
+  }
+}
+
+mutation LogHabitEntry($habitId: UUID!, $value: Int!, $notes: String) @auth(level: USER) {
+  habitLog_insert(data: {
+    userId_expr: "auth.uid",
+    habitId: $habitId,
+    logDate_expr: "request.time",
+    value: $value,
+    notes: $notes,
+    createdAt_expr: "request.time"
+  })
+}

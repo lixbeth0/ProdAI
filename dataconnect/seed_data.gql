@@ -1,0 +1,66 @@
+mutation CreateSeedData @transaction @auth(level: USER, insecureReason: "This is a seed mutation and only accessible to logged in users.") {
+  user1: user_insert(data: {
+    username: "jane.doe",
+    email: "jane.doe@example.com",
+    createdAt: "2023-01-01T10:00:00Z",
+    firstName: "Jane",
+    lastName: "Doe",
+    profilePictureUrl: "https://example.com/jane_profile.jpg"
+  })
+  user2: user_insert(data: {
+    username: "john.smith",
+    email: "john.smith@example.com",
+    createdAt: "2023-01-02T11:00:00Z",
+    firstName: "John",
+    lastName: "Smith",
+    profilePictureUrl: "https://example.com/john_profile.jpg"
+  })
+  habit1: habit_insert(data: {
+    userId_expr: "mutation.user1.id",
+    name: "Drink Water",
+    category: "Health",
+    createdAt: "2023-01-01T10:30:00Z",
+    description: "Drink 8 glasses of water daily",
+    goalUnit: "glasses",
+    targetValue: 8,
+    frequency: "Daily"
+  })
+  habit2: habit_insert(data: {
+    userId_expr: "mutation.user2.id",
+    name: "Read Book",
+    category: "Personal Development",
+    createdAt: "2023-01-02T11:30:00Z",
+    description: "Read for 30 minutes every day",
+    goalUnit: "minutes",
+    targetValue: 30,
+    frequency: "Daily"
+  })
+  goal1: goal_insert(data: {
+    userId_expr: "mutation.user1.id",
+    habitId_expr: "mutation.habit1.id",
+    name: "Complete Water Challenge",
+    targetValue: 8,
+    targetUnit: "glasses",
+    startDate: "2023-01-01",
+    endDate: "2023-01-31",
+    status: "In Progress",
+    createdAt: "2023-01-01T10:45:00Z",
+    description: "Successfully drink 8 glasses of water for a month."
+  })
+  habitLog1: habitLog_insert(data: {
+    userId_expr: "mutation.user1.id",
+    habitId_expr: "mutation.habit1.id",
+    logDate: "2023-01-01T15:00:00Z",
+    value: 8,
+    createdAt: "2023-01-01T15:00:00Z",
+    notes: "Achieved daily water intake."
+  })
+  recommendation1: recommendation_insert(data: {
+    userId_expr: "mutation.user1.id",
+    message: "Consider adding a fruit smoothie to your morning routine for extra vitamins!",
+    generatedAt: "2023-01-03T09:00:00Z",
+    type: "Nutrition",
+    status: "New",
+    relatedHabitId_expr: "mutation.habit1.id"
+  })
+}

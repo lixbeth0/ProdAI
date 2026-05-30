@@ -1,0 +1,24 @@
+.ai-tools-container {
+  min-height: 100vh;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #111827,
+    #1e293b
+  );
+}
+
+.ai-tools-container h1 {
+  color: white;
+  font-size: 2rem;
+}
+
+.ai-tools-container p {
+  color: rgba(255,255,255,0.7);
+}

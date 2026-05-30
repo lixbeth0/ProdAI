@@ -1,0 +1,39 @@
+.activity-card {
+  width: 100%;
+
+  background: rgba(255,255,255,0.9);
+
+  border-radius: 25px;
+
+  padding: 20px;
+
+  margin-top: 20px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.activity-card h3 {
+  margin-bottom: 15px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  padding: 14px;
+
+  background: rgba(124,58,237,0.08);
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+  transition: 0.3s;
+}
+
+.activity-item:hover {
+  transform: translateX(5px);
+}

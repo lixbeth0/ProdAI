@@ -1,0 +1,50 @@
+type User @table {
+  username: String!
+  email: String!
+  createdAt: Timestamp!
+  firstName: String
+  lastName: String
+  profilePictureUrl: String
+}
+
+type Habit @table {
+  user: User!
+  name: String!
+  category: String!
+  createdAt: Timestamp!
+  description: String
+  goalUnit: String
+  targetValue: Int
+  frequency: String
+}
+
+type HabitLog @table {
+  user: User!
+  habit: Habit!
+  logDate: Timestamp!
+  value: Int!
+  createdAt: Timestamp!
+  notes: String
+}
+
+type Recommendation @table {
+  user: User!
+  message: String!
+  generatedAt: Timestamp!
+  type: String!
+  status: String!
+  relatedHabit: Habit
+}
+
+type Goal @table {
+  user: User!
+  habit: Habit!
+  name: String!
+  targetValue: Int!
+  targetUnit: String!
+  startDate: Date!
+  endDate: Date!
+  status: String!
+  createdAt: Timestamp!
+  description: String
+}
