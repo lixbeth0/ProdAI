@@ -1,0 +1,16 @@
+.classroom-container {
+  width: 100%;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.welcome-card {
+  background: rgba(48, 28, 135, 0.6);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 3px 12px rgba(166, 166, 166, 0.429);
+}

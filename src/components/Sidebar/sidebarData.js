@@ -3,8 +3,10 @@ import {
   BarChart3,
   Brain,
   Settings,
+  School,
   ClipboardList
 } from "lucide-react";
+
 export const sidebarData = [
   {
     title: "Dashboard",
@@ -18,7 +20,7 @@ export const sidebarData = [
   },
   {
   title: "Classroom",
-  icon: BarChart3,
+  icon: School,
   path: "/Classroom",
   },
   {

@@ -22,7 +22,8 @@ export const getGoogleProvider = () => {
 
   provider.addScope("https://www.googleapis.com/auth/classroom.courses.readonly");
   provider.addScope("https://www.googleapis.com/auth/classroom.coursework.me.readonly");
-
+  provider.addScope("https://www.googleapis.com/auth/classroom.rosters.readonly");
+  
   return provider;
 };
 
