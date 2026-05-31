@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword
 } from "firebase/auth";
 
-import { auth, db } from "../../firebase/firebase";
+import { auth, db, getGoogleProvider } from "../../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 export default function Login() {
@@ -31,7 +31,7 @@ export default function Login() {
     setError("");
   };
 
-  // 🔐 Login con email y password
+  // 🔐 LOGIN EMAIL
   const login = async () => {
     if (!form.correo || !form.password) {
       setError("Completa todos los campos");
@@ -64,24 +64,34 @@ export default function Login() {
     }
   };
 
-  // 🔵 Login con Google
+  // 🔵 LOGIN GOOGLE + CLASSROOM
   const loginGoogle = async () => {
     try {
       setLoading(true);
 
-      const provider = new GoogleAuthProvider();
+      // 🔥 IMPORTANTE: provider con scopes limpios
+      const provider = getGoogleProvider();
 
       const result = await signInWithPopup(auth, provider);
+
       const user = result.user;
 
-      // 🔥 Guardar usuario en Firestore
+      // 🔑 TOKEN REAL DE GOOGLE
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+
+      console.log("🔥 TOKEN CLASSROOM:", token);
+
+      // 💾 Guardar usuario en Firestore
       await setDoc(
         doc(db, "users", user.uid),
         {
           nombre: user.displayName || "Sin nombre",
           correo: user.email,
           photo: user.photoURL || "",
-          uid: user.uid
+          uid: user.uid,
+          provider: "google",
+          classroomToken: token
         },
         { merge: true }
       );
@@ -119,17 +129,14 @@ export default function Login() {
           </button>
         </div>
 
-        {/* Email */}
         <label>Correo</label>
         <input
           className="input"
           name="correo"
           value={form.correo}
           onChange={handleChange}
-          placeholder="ejemplo@gmail.com"
         />
 
-        {/* Password */}
         <label>Contraseña</label>
         <input
           type="password"
@@ -137,13 +144,10 @@ export default function Login() {
           name="password"
           value={form.password}
           onChange={handleChange}
-          placeholder="••••••••"
         />
 
-        {/* Error */}
         {error && <p className="error">{error}</p>}
 
-        {/* Login button */}
         <button
           className="button"
           onClick={login}
@@ -152,7 +156,6 @@ export default function Login() {
           {loading ? "Cargando..." : "Iniciar sesión"}
         </button>
 
-        {/* Google login */}
         <button
           className="google-btn"
           onClick={loginGoogle}

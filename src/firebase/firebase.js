@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -16,6 +15,18 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const onAuthStateChangedListener = (callback) => { 
+
+// 🔥 FUNCIÓN PROPIA (MEJOR CONTROL)
+export const getGoogleProvider = () => {
+  const provider = new GoogleAuthProvider();
+
+  provider.addScope("https://www.googleapis.com/auth/classroom.courses.readonly");
+  provider.addScope("https://www.googleapis.com/auth/classroom.coursework.me.readonly");
+
+  return provider;
+};
+
+// listener auth
+export const onAuthStateChangedListener = (callback) => {
   onAuthStateChanged(auth, callback);
 };
