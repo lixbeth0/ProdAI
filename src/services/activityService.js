@@ -1,22 +1,23 @@
 import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
-export const getRecentActivities = async () => {
-  try {
-    const q = query(
-      collection(db, "activities"),
-      orderBy("timestamp", "desc"),
-      limit(5)
-    );
+export const getRecentActivities = (callback) => {
 
-    const snapshot = await onSnapshot(q);
+  const q = query(
+    collection(db, "activities"),
+    orderBy("timestamp", "desc"),
+    limit(5)
+  );
 
-    return snapshot.docs.map((doc) => ({
+  return onSnapshot(q, (snapshot) => {
+
+    const data = snapshot.docs.map(doc => ({
       id: doc.id,
-      ...doc.data(),
+      ...doc.data()
     }));
-  } catch (error) {
-    console.error("Error obteniendo actividades:", error);
-    return [];
-  }
+
+    callback(data);
+
+  });
+
 };

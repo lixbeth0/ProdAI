@@ -1,17 +1,19 @@
-/* PAGE */
+/* =========================================
+   PAGE
+========================================= */
+
 .ai-page {
   height: 100vh;
-
   display: flex;
   flex-direction: column;
-  
-  background:
-    rgba(17, 24, 39, 0.98);
-
+  background: rgba(17, 24, 39, 0.98);
   overflow: hidden;
 }
 
-/* WRAPPER */
+/* =========================================
+   WRAPPER
+========================================= */
+
 .ai-chat-wrapper {
   flex: 1;
 
@@ -22,35 +24,48 @@
 
   border-radius: 28px;
 
-  background:linear-gradient(
-      135deg,
-      rgba(99,102,241,0.18),
-      rgba(168,85,247,0.12));
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.18),
+    rgba(168, 85, 247, 0.12)
+  );
 
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-
-  box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
 
   overflow: hidden;
 }
 
-/* =========================
-   HEADER CHAT
-========================= */
+/* =========================================
+   CHAT
+========================================= */
+
+.ai-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* =========================================
+   HEADER
+========================================= */
 
 .ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   padding: 18px 20px;
 
   background: linear-gradient(
     135deg,
-    rgba(99,102,241,0.18),
-    rgba(168,85,247,0.12)
+    rgba(99, 102, 241, 0.18),
+    rgba(168, 85, 247, 0.12)
   );
 
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
   color: white;
 }
@@ -62,75 +77,171 @@
 
 .ai-header p {
   margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ai-status {
+  color: #4ade80;
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
 }
 
-/* =========================
-   MESSAGES (SOLO ESTA PARTE SCROLL)
-========================= */
-.ai-chat {
-  flex: 1;
+/* =========================================
+   MENSAJES
+========================================= */
 
-  display: flex;
-  flex-direction: column;
-
-  min-height: 0;
-}
-
-/* AREA MENSAJES */
 .ai-messages {
   flex: 1;
 
   overflow-y: auto;
 
   min-height: 0;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
 }
 
-/* SCROLLBAR (bonita estilo SaaS) */
+/* =========================================
+   SCROLLBAR
+========================================= */
+
 .ai-messages::-webkit-scrollbar {
   width: 6px;
 }
 
 .ai-messages::-webkit-scrollbar-thumb {
-  background: rgba(168,85,247,0.4);
+  background: rgba(168, 85, 247, 0.4);
   border-radius: 10px;
 }
 
-/* =========================
+/* =========================================
    BUBBLES
-========================= */
+========================================= */
 
 .msg {
-  max-width: 70%;
-  padding: 12px 14px;
-  border-radius: 16px;
+  max-width: 75%;
 
-  font-size: 0.95rem;
-  line-height: 1.5;
+  padding: 14px 16px;
+
+  border-radius: 18px;
+
+  line-height: 1.6;
+
+  word-break: break-word;
 }
 
-/* USER */
 .msg.user {
   align-self: flex-end;
 
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: linear-gradient(
+    135deg,
+    #6366f1,
+    #a855f7
+  );
+
   color: white;
 }
 
-/* AI */
 .msg.assistant {
   align-self: flex-start;
 
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.06);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   color: white;
 }
 
-/* =========================
-   INPUT FIXED BOTTOM
-========================= */
+/* =========================================
+   MARKDOWN
+========================================= */
+
+.msg.assistant h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.msg.assistant h2 {
+  font-size: 1.5rem;
+  margin: 20px 0 10px;
+  color: white;
+}
+
+.msg.assistant h3 {
+  font-size: 1.2rem;
+  margin: 15px 0 10px;
+  color: white;
+}
+
+.msg.assistant p {
+  margin: 10px 0;
+  line-height: 1.8;
+}
+
+.msg.assistant ul,
+.msg.assistant ol {
+  padding-left: 25px;
+  margin: 12px 0;
+}
+
+.msg.assistant li {
+  margin-bottom: 8px;
+}
+
+.msg.assistant strong {
+  font-weight: 700;
+}
+
+.msg.assistant hr {
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 20px 0;
+}
+
+.msg.assistant blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 12px;
+  margin: 15px 0;
+}
+
+.msg.assistant code {
+  background: rgba(255,255,255,0.1);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.msg.assistant pre {
+  background: #111827;
+  padding: 15px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.msg.assistant table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.msg.assistant th,
+.msg.assistant td {
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 10px;
+}
+
+.msg.assistant th {
+  background: rgba(255,255,255,0.08);
+}
+
+/* =========================================
+   INPUT
+========================================= */
 
 .ai-input-box {
   display: flex;
@@ -139,34 +250,54 @@
   padding: 15px;
 
   background: rgba(255,255,255,0.04);
+
   border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-.ai-input-box input {
+.ai-input-box textarea {
   flex: 1;
+
+  min-height: 55px;
+  max-height: 150px;
+
+ /* resize: vertical;*/
 
   padding: 12px 14px;
 
-  border-radius: 14px;
   border: none;
   outline: none;
 
+  border-radius: 14px;
+
   background: rgba(255,255,255,0.06);
+
   color: white;
 }
 
-.ai-input-box input::placeholder {
+.ai-input-box textarea::placeholder {
   color: rgba(255,255,255,0.5);
 }
 
 .ai-input-box button {
-  padding: 12px 16px;
+  padding: 12px 18px;
 
   border: none;
+
   border-radius: 14px;
 
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: linear-gradient(
+    135deg,
+    #6366f1,
+    #a855f7
+  );
+
   color: white;
 
   cursor: pointer;
+
+  font-weight: 600;
+}
+
+.ai-input-box button:hover {
+  opacity: 0.9;
 }
