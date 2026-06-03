@@ -16,14 +16,31 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// 🔥 FUNCIÓN PROPIA (MEJOR CONTROL)
+// 🔥 GOOGLE PROVIDER + CLASSROOM
 export const getGoogleProvider = () => {
+
   const provider = new GoogleAuthProvider();
 
-  provider.addScope("https://www.googleapis.com/auth/classroom.courses.readonly");
-  provider.addScope("https://www.googleapis.com/auth/classroom.coursework.me.readonly");
-  provider.addScope("https://www.googleapis.com/auth/classroom.rosters.readonly");
-  
+  // Cursos
+  provider.addScope(
+    "https://www.googleapis.com/auth/classroom.courses.readonly"
+  );
+
+  // Tareas
+  provider.addScope(
+    "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+  );
+
+  // Lista de alumnos
+  provider.addScope(
+    "https://www.googleapis.com/auth/classroom.rosters.readonly"
+  );
+
+  // 🔥 ENTREGAS DEL ALUMNO
+  provider.addScope(
+    "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
+  );
+
   return provider;
 };
 

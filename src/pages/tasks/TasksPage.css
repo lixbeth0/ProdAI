@@ -327,3 +327,22 @@
     margin-bottom: 15px;
   color: rgba(255,255,255,0.75);
 }
+
+.task-source {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.task-source.classroom {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.task-source.manual {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}

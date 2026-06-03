@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase/firebase";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy
+} from "firebase/firestore";
 
 export const useActivities = () => {
 
@@ -10,39 +16,71 @@ export const useActivities = () => {
 
   useEffect(() => {
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribeAuth = onAuthStateChanged(
+      auth,
+      (user) => {
 
-      if (!user) {
-        setActivities([]);
-        setLoading(false);
-        return;
-      }
+        if (!user) {
+          setActivities([]);
+          setLoading(false);
+          return;
+        }
 
-      try {
         const q = query(
           collection(db, "activities"),
-          orderBy("timestamp", "desc")
+          orderBy("createdAt", "desc")
         );
 
-        const snapshot = await onSnapshot(q);
+        const unsubscribeActivities = onSnapshot(
+          q,
+          (snapshot) => {
 
-        const data = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+            const data = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }));
 
-        setActivities(data);
+            const today = new Date();
 
-      } catch (error) {
-        console.error("Error actividades:", error);
+            const activeActivities =
+              data.filter(activity => {
+
+                if (
+                  !activity.dueDate ||
+                  activity.dueDate === "Sin fecha"
+                ) {
+                  return true;
+                }
+
+                const dueDate =
+                  new Date(activity.dueDate);
+
+                return dueDate >= today;
+              });
+
+            setActivities(activeActivities);
+            setLoading(false);
+          },
+          (error) => {
+            console.error(
+              "Error actividades:",
+              error
+            );
+
+            setLoading(false);
+          }
+        );
+
+        return unsubscribeActivities;
       }
+    );
 
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    return unsubscribeAuth;
 
   }, []);
 
-  return { activities, loading };
+  return {
+    activities,
+    loading
+  };
 };

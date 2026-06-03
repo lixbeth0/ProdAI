@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useActivities } from "../../hooks/useActivities";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 import "./TasksPage.css";
@@ -15,11 +16,38 @@ import { auth } from "../../firebase/firebase";
 import TaskCard from "../../components/tasks/TaskCard";
 
 function TasksPage() {
+
+  // =========================
+  // TAREAS MANUALES
+  // =========================
   const { tasks, loading } = useTasks();
 
-  // 🔥 subjects únicos
+  // =========================
+  // TAREAS DE CLASSROOM
+  // =========================
+  const {
+    activities,
+    loading: loadingActivities
+  } = useActivities();
+
+  // =========================
+  // UNIR TODAS LAS TAREAS
+  // =========================
+  const allTasks = [
+    ...tasks,
+    ...activities
+  ];
+
+  // =========================
+  // MATERIAS ÚNICAS
+  // (manuales + classroom)
+  // =========================
   const subjects = [
-    ...new Set(tasks.map(t => t.subject).filter(Boolean))
+    ...new Set(
+      allTasks
+        .map(t => t.subject)
+        .filter(Boolean)
+    )
   ];
 
   // =========================
@@ -36,9 +64,10 @@ function TasksPage() {
   const [error, setError] = useState("");
 
   // =========================
-  // CREATE TASK
+  // CREAR TAREA
   // =========================
   const handleCreateTask = async () => {
+
     setError("");
 
     if (!title.trim()) {
@@ -52,6 +81,7 @@ function TasksPage() {
     }
 
     try {
+
       setCreating(true);
 
       await createTask({
@@ -64,7 +94,7 @@ function TasksPage() {
         userId: auth.currentUser.uid
       });
 
-      // reset form
+      // limpiar formulario
       setTitle("");
       setDescription("");
       setSubject("");
@@ -73,32 +103,51 @@ function TasksPage() {
       setDueTime("");
 
     } catch (err) {
+
       console.error(err);
       setError("Error al crear la tarea");
 
     } finally {
+
       setCreating(false);
+
     }
   };
 
   // =========================
-  // TOGGLE TASK
+  // COMPLETAR TAREA
   // =========================
-  const handleToggleTask = async (taskId, completed) => {
-    await toggleTask(taskId, completed);
+  const handleToggleTask = async (
+    taskId,
+    completed
+  ) => {
+
+    await toggleTask(
+      taskId,
+      completed
+    );
+
   };
 
   // =========================
-  // DELETE TASK
+  // ELIMINAR TAREA
   // =========================
-  const handleDeleteTask = async (taskId) => {
+  const handleDeleteTask = async (
+    taskId
+  ) => {
+
     await deleteTask(taskId);
+
   };
 
   // =========================
   // LOADING
   // =========================
-  if (loading) {
+  if (
+    loading ||
+    loadingActivities
+  ) {
+
     return (
       <DashboardLayout>
         <h2 style={{ color: "white" }}>
@@ -106,153 +155,245 @@ function TasksPage() {
         </h2>
       </DashboardLayout>
     );
+
   }
 
   return (
+
     <DashboardLayout>
+
       <div className="tasks-page">
 
         {/* =========================
-            FORM
+            FORMULARIO
         ========================= */}
         <div className="task-form">
 
           <div className="task-form-header">
-            <h2>Nueva Actividades</h2>
-            <p>Organiza tus actividades académicas</p>
+            <h2>Nueva Actividad</h2>
+            <p>
+              Organiza tus actividades académicas
+            </p>
           </div>
 
-          {/* TITLE */}
+          {/* TÍTULO */}
           <div className="task-input-group">
+
             <label>Título</label>
+
             <input
               type="text"
               placeholder="Ej. Resolver ejercicios de álgebra"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) =>
+                setTitle(e.target.value)
+              }
             />
+
           </div>
 
-          {/* PRIORITY */}
+          {/* PRIORIDAD */}
           <div className="task-input-group">
+
             <label>Prioridad</label>
+
             <select
-            className="task-select"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
+              className="task-select"
+              value={priority}
+              onChange={(e) =>
+                setPriority(e.target.value)
+              }
             >
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
+              <option value="Alta">
+                Alta
+              </option>
+
+              <option value="Media">
+                Media
+              </option>
+
+              <option value="Baja">
+                Baja
+              </option>
+
             </select>
+
           </div>
 
-          {/* DATE */}
+          {/* FECHA */}
           <div className="task-input-group">
+
             <label>Fecha límite</label>
+
             <input
               type="date"
               value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
+              onChange={(e) =>
+                setDueDate(e.target.value)
+              }
             />
+
           </div>
 
-          {/* TIME */}
+          {/* HORA */}
           <div className="task-input-group">
+
             <label>Hora límite</label>
+
             <input
               type="time"
               value={dueTime}
-              onChange={(e) => setDueTime(e.target.value)}
+              onChange={(e) =>
+                setDueTime(e.target.value)
+              }
             />
+
           </div>
 
-          {/* DESCRIPTION */}
+          {/* DESCRIPCIÓN */}
           <div className="task-input-group">
+
             <label>Descripción</label>
+
             <textarea
               placeholder="Describe los detalles..."
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) =>
+                setDescription(
+                  e.target.value
+                )
+              }
             />
+
           </div>
 
-          {/* SUBJECT */}
+          {/* MATERIA */}
           <div className="task-input-group">
+
             <label>Materia</label>
+
             <input
               type="text"
               list="subjects-list"
               placeholder="Ej. Matemáticas"
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              onChange={(e) =>
+                setSubject(
+                  e.target.value
+                )
+              }
             />
 
             <datalist id="subjects-list">
-              {subjects.map((subj, i) => (
-                <option key={i} value={subj} />
-              ))}
+
+              {subjects.map(
+                (subj, i) => (
+
+                  <option
+                    key={i}
+                    value={subj}
+                  />
+
+                )
+              )}
+
             </datalist>
+
           </div>
 
           {/* ERROR */}
           {error && (
-            <p style={{ color: "#f87171", fontSize: "0.85rem" }}>
+
+            <p
+              style={{
+                color: "#f87171",
+                fontSize: "0.85rem"
+              }}
+            >
               {error}
             </p>
+
           )}
 
-          {/* BUTTON */}
+          {/* BOTÓN */}
           <button
             className="create-task-btn"
             onClick={handleCreateTask}
             disabled={creating}
           >
-            {creating ? "Creando..." : "Crear actividad"}
+
+            {creating
+              ? "Creando..."
+              : "Crear actividad"}
+
           </button>
 
         </div>
 
         {/* =========================
-            TASKS LIST
+            LISTA DE TAREAS
         ========================= */}
         <div className="tasks-section">
 
           <div className="tasks-header">
 
             <div>
-              <h2>Mis Actividades</h2>
-              <p>Seguimiento de actividades académicas</p>
+
+              <h2>
+                Mis Actividades
+              </h2>
+
+              <p>
+                Seguimiento de actividades académicas
+              </p>
+
             </div>
 
             <div className="tasks-count">
-              {tasks.length} tareas
+              {allTasks.length} tareas
             </div>
 
           </div>
 
-          {tasks.length === 0 ? (
+          {allTasks.length === 0 ? (
+
             <div className="empty-tasks">
-              <h3>No hay tareas todavía</h3>
-              <p>Crea tu primera tarea para comenzar.</p>
+
+              <h3>
+                No hay tareas todavía
+              </h3>
+
+              <p>
+                Crea tu primera tarea para comenzar.
+              </p>
+
             </div>
+
           ) : (
+
             <div className="tasks-grid">
-              {tasks.map(task => (
+
+              {allTasks.map(task => (
+
                 <TaskCard
                   key={task.id}
                   task={task}
                   onToggle={handleToggleTask}
                   onDelete={handleDeleteTask}
                 />
+
               ))}
+
             </div>
+
           )}
 
         </div>
 
       </div>
+
     </DashboardLayout>
+
   );
 }
 
