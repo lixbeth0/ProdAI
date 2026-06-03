@@ -1,5 +1,5 @@
-/*function Loader() {
+function Loader() {
   return <h2>Cargando...</h2>;
 }
 
-export default Loader;*/
+export default Loader;

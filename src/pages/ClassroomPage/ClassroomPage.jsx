@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import "./ClassroomPage.css";
-import {
-  getCourses,
-  getCourseWork,
-  getStudentSubmissions
-} from "../../api/classroom";
-
+import { getCourses, getCourseWork } from "../../api/classroom";
 import {
   collection,
   addDoc,
@@ -58,162 +53,85 @@ export default function ClassroomPage() {
         // =========================
         const allTasks = [];
 
-       for (const course of coursesData) {
+        for (const course of coursesData) {
 
-      try {
+          try {
 
-        // =========================
-        // OBTENER TAREAS DEL CURSO
-        // =========================
-        const works = await getCourseWork(
-          course.id,
-          token
-        );
-
-        // =========================
-        // RECORRER CADA TAREA
-        // =========================
-        for (const work of works) {
-
-          const today = new Date();
-
-          // =========================
-          // IGNORAR TAREAS VENCIDAS
-          // =========================
-          if (work.dueDate) {
-
-            const dueDate = new Date(
-              work.dueDate.year,
-              work.dueDate.month - 1,
-              work.dueDate.day,
-              work.dueTime?.hours || 23,
-              work.dueTime?.minutes || 59
+            const works = await getCourseWork(
+              course.id,
+              token
             );
 
-            //if (dueDate < today) {
-              //continue;
-            //}
-          }
+            works.forEach((work) => {
 
-          // =========================
-          // FORMATEAR FECHA
-          // =========================
-          const formattedDate = work.dueDate
-            ? `${work.dueDate.year}-${String(
-                work.dueDate.month
-              ).padStart(2, "0")}-${String(
+            // =========================
+            // FORMATEAR FECHA
+            // =========================
+            const formattedDate = work.dueDate
+                ? `${work.dueDate.year}-${String(
+                    work.dueDate.month
+                ).padStart(2, "0")}-${String(
+                    work.dueDate.day
+                ).padStart(2, "0")}`
+                : "Sin fecha";
+
+            // =========================
+            // CALCULAR PRIORIDAD
+            // =========================
+            let priority = "Baja";
+
+            if (work.dueDate) {
+
+                const dueDate = new Date(
+                work.dueDate.year,
+                work.dueDate.month - 1,
                 work.dueDate.day
-              ).padStart(2, "0")}`
-            : "Sin fecha";
-
-          // =========================
-          // CALCULAR PRIORIDAD
-          // =========================
-          let priority = "Baja";
-
-          if (work.dueDate) {
-
-            const dueDate = new Date(
-              work.dueDate.year,
-              work.dueDate.month - 1,
-              work.dueDate.day
-            );
-
-            const diffDays = Math.ceil(
-              (dueDate - today) /
-              (1000 * 60 * 60 * 24)
-            );
-
-            if (diffDays <= 1) {
-              priority = "Alta";
-            } else if (diffDays <= 3) {
-              priority = "Media";
-            } else {
-              priority = "Baja";
-            }
-          }
-
-            // =========================
-            // VERIFICAR ESTADO REAL DE LA ENTREGA
-            // =========================
-            try {
-
-              const submissions =
-                await getStudentSubmissions(
-                  course.id,
-                  work.id,
-                  token
                 );
 
-              const mySubmission =
-                submissions[0];
+                const today = new Date();
 
-              // =========================
-              // MOSTRAR EN CONSOLA
-              // PARA VER EL ESTADO
-              // =========================
-              console.log(
-                "Tarea:",
-                work.title
-              );
+                const diffDays = Math.ceil(
+                (dueDate - today) / (1000 * 60 * 60 * 24)
+                );
 
-              console.log(
-                "Entrega:",
-                mySubmission
-              );
-
-              console.log(
-                "Estado:",
-                mySubmission?.state
-              );
-
-              // =========================
-              // FILTRO ACTUAL
-              // =========================
-              //if (
-                //mySubmission?.state === "TURNED_IN" ||
-                //mySubmission?.state === "RETURNED"
-              //) {
-               // continue;
-              //}
-
-            } catch (submissionError) {
-
-              console.error(
-                "Error obteniendo entregas:",
-                submissionError
-              );
-
+                if (diffDays <= 1) {
+                priority = "Alta";
+                } else if (diffDays <= 3) {
+                priority = "Media";
+                } else {
+                priority = "Baja";
+                }
             }
-          // =========================
-          // AGREGAR TAREA
-          // =========================
-          allTasks.push({
-            classroomId: work.id,
-            title: work.title,
-            description: work.description || "",
-            subject: course.name,
-            completed: false,
-            source: "classroom",
-            dueDate: formattedDate,
-            priority
-          });
+
+            // =========================
+            // AGREGAR TAREA
+            // =========================
+            allTasks.push({
+                classroomId: work.id,
+                title: work.title,
+                description: work.description || "",
+                subject: course.name,
+                completed: false,
+                source: "classroom",
+                dueDate: formattedDate,
+                priority
+            });
+
+            });
+
+          } catch (err) {
+
+            console.error(
+              "Error obteniendo tareas del curso:",
+              course.name,
+              err
+            );
+
+          }
 
         }
 
-      } catch (err) {
-
-        console.error(
-          "Error obteniendo tareas del curso:",
-          course.name,
-          err
-        );
-
-      }
-
-    }
-
-// =========================
+        // =========================
 // GUARDAR EN FIRESTORE
 // =========================
 

@@ -80,9 +80,7 @@ export default function Login() {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
 
-      localStorage.setItem("googleToken", token);
-
-      console.log("TOKEN:", token);
+      console.log("🔥 TOKEN CLASSROOM:", token);
 
       // 💾 Guardar usuario en Firestore
       await setDoc(
