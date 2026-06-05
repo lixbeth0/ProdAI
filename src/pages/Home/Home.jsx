@@ -7,9 +7,16 @@ import { useNavigate } from "react-router-dom";
 import AIChat from "../../components/ai/AIChat";
 import { useUserData } from "../../hooks/useUserData";
 import { useTasks } from "../../hooks/useTasks";
+import { useEffect } from "react";
+
+import {
+  getCourses,
+  getCourseWork
+} from "../../api/classroom";
 
 import StatsCard from "../../components/StatsCard/StatsCard";
 import DashboardLayout from "../../layouts/DashboardLayout";
+
 
 function Home() {
 
@@ -17,8 +24,62 @@ function Home() {
 
   // 🔥 DATA REAL
   const { tasks } = useTasks();
+  const [courses, setCourses] = useState([]);
+  const [classroomTasks, setClassroomTasks] = useState([]); 
 
   const { userData, loading } = useUserData();
+
+  // DEBUG
+useEffect(() => {
+  console.log("USER DATA:", userData);
+  console.log("TOKEN:", userData?.classroomToken);
+}, [userData]);
+
+// CLASSROOM
+useEffect(() => {
+
+  const loadClassroom = async () => {
+
+    if (!userData?.classroomToken) return;
+
+    try {
+
+      const coursesData = await getCourses(
+        userData.classroomToken
+      );
+
+      setCourses(coursesData);
+
+      let allTasks = [];
+
+      for (const course of coursesData) {
+
+        const works = await getCourseWork(
+          course.id,
+          userData.classroomToken
+        );
+
+        allTasks.push(
+          ...works.map(work => ({
+            ...work,
+            courseName: course.name
+          }))
+        );
+      }
+
+      setClassroomTasks(allTasks);
+
+    } catch (error) {
+      console.error(
+        "Error cargando Classroom:",
+        error
+      );
+    }
+  };
+
+  loadClassroom();
+
+}, [userData]);
 
   // 🔥 DROPDOWN
   const [menuOpen, setMenuOpen] = useState(false);
@@ -201,6 +262,38 @@ function Home() {
           <StatsCard title="Materias activas" value={subjectsCount} />
 
         </div>
+
+        <div className="welcome-card">
+
+  <h2>📚 Materias de Classroom</h2>
+
+  {courses.length === 0 ? (
+    <p>No se encontraron cursos.</p>
+  ) : (
+    courses.map(course => (
+      <p key={course.id}>
+        • {course.name}
+      </p>
+    ))
+  )}
+
+</div>
+
+<div className="welcome-card">
+
+  <h2>📝 Tareas de Classroom</h2>
+
+  {classroomTasks.length === 0 ? (
+    <p>No hay tareas de Classroom.</p>
+  ) : (
+    classroomTasks.slice(0, 10).map(task => (
+      <p key={task.id}>
+        • {task.title} ({task.courseName})
+      </p>
+    ))
+  )}
+
+</div>
 
         {/* ================= HOY ================= */}
         <div className="welcome-card">

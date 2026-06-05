@@ -21,25 +21,29 @@ export const getGoogleProvider = () => {
 
   const provider = new GoogleAuthProvider();
 
-  // Cursos
   provider.addScope(
-    "https://www.googleapis.com/auth/classroom.courses.readonly"
-  );
+  "https://www.googleapis.com/auth/classroom.courses.readonly"
+);
 
-  // Tareas
-  provider.addScope(
-    "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
-  );
+provider.addScope(
+  "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+);
 
-  // Lista de alumnos
-  provider.addScope(
-    "https://www.googleapis.com/auth/classroom.rosters.readonly"
-  );
+provider.addScope(
+  "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+);
 
-  // 🔥 ENTREGAS DEL ALUMNO
-  provider.addScope(
-    "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
-  );
+provider.addScope(
+  "https://www.googleapis.com/auth/classroom.rosters.readonly"
+);
+
+provider.addScope(
+  "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
+);
+
+provider.setCustomParameters({
+  prompt: "consent"
+});
 
   return provider;
 };

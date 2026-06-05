@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 import { auth, db, getGoogleProvider } from "../../firebase/firebase";
@@ -80,7 +81,7 @@ export default function Login() {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
 
-      console.log("🔥 TOKEN CLASSROOM:", token);
+      //console.log("TOKEN:", token);
 
       // 💾 Guardar usuario en Firestore
       await setDoc(
@@ -106,6 +107,38 @@ export default function Login() {
       setLoading(false);
     }
   };
+
+  const recuperarPassword = async () => {
+  if (!form.correo) {
+    setError("Ingresa tu correo para recuperar la contraseña");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    await sendPasswordResetEmail(auth, form.correo);
+
+    alert(
+      "Se envió un enlace de recuperación a tu correo."
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    const errores = {
+      "auth/user-not-found": "No existe una cuenta con ese correo",
+      "auth/invalid-email": "Correo inválido"
+    };
+
+    setError(
+      errores[error.code] || "Error al enviar el correo"
+    );
+
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="container">
@@ -145,6 +178,20 @@ export default function Login() {
           value={form.password}
           onChange={handleChange}
         />
+
+        <p
+          style={{
+            textAlign: "right",
+            cursor: "pointer",
+            color: "#2563eb",
+            marginTop: "5px",
+            marginBottom: "15px",
+            fontSize: "14px"
+          }}
+          onClick={recuperarPassword}
+        >
+          ¿Olvidaste tu contraseña?
+        </p>
 
         {error && <p className="error">{error}</p>}
 

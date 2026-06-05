@@ -6,7 +6,7 @@ import Home from "./pages/Home/Home";
 import Profile from "./pages/Profile/Profile";
 import TasksPage from "./pages/tasks/TasksPage";
 import AIPage from "./pages/AIPage/AIPage";
-
+import ClassroomPage from "./pages/ClassroomPage/ClassroomPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -53,6 +53,15 @@ function App() {
         element={
           <ProtectedRoute user={user}>
             <AIPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/Classroom"
+        element={
+          <ProtectedRoute user={user}>
+            <ClassroomPage />
           </ProtectedRoute>
         }
       />

@@ -13,16 +13,26 @@ export const getCourses = async (token) => {
 };
 
 export const getCourseWork = async (courseId, token) => {
+
   const res = await fetch(
     `https://classroom.googleapis.com/v1/courses/${courseId}/courseWork`,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        Authorization: `Bearer ${token}`
+      }
     }
   );
 
   const data = await res.json();
+
+  console.log(
+  "CURSO:",
+  courseId,
+  "STATUS:",
+  res.status,
+  JSON.stringify(data, null, 2)
+);
+
   return data.courseWork || [];
 };
 
