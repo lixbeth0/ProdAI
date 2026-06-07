@@ -9,7 +9,7 @@ import AIPage from "./pages/AIPage/AIPage";
 import ClassroomPage from "./pages/ClassroomPage/ClassroomPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
-
+import SettingsPage from "./pages/settings/SettingsPage";
 
 function App() {
   const { user } = useAuth();
@@ -53,6 +53,15 @@ function App() {
         element={
           <ProtectedRoute user={user}>
             <AIPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/settings"
+        element={
+        <ProtectedRoute user={user}>
+            <SettingsPage />
           </ProtectedRoute>
         }
       />

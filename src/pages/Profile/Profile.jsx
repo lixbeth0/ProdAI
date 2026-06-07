@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import "./Profile.css";
 
 function Profile() {
   const [nombre, setNombre] = useState("");
@@ -14,7 +15,7 @@ function Profile() {
         const snap = await getDoc(ref);
 
         if (snap.exists()) {
-          setNombre(snap.data().nombre);
+          setNombre(snap.data().nombre || "");
         }
       }
     };
@@ -29,7 +30,7 @@ function Profile() {
       const ref = doc(db, "usuarios", user.uid);
 
       await updateDoc(ref, {
-        nombre: nombre,
+        nombre
       });
 
       alert("Perfil actualizado ✔");
@@ -37,18 +38,42 @@ function Profile() {
   };
 
   return (
-    <div className="profile">
-      <h2>👤 Mi Perfil</h2>
+    <div className="profile-page">
 
-      <input
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        placeholder="Nombre"
-      />
+      <div className="profile-card">
 
-      <button onClick={handleUpdate}>
-        Guardar cambios
-      </button>
+        <div className="profile-header">
+          <div className="profile-avatar">
+            {nombre?.charAt(0)?.toUpperCase() || "U"}
+          </div>
+
+          <div>
+            <h2>Mi Perfil</h2>
+            <p>Administra tu información personal</p>
+          </div>
+        </div>
+
+        <div className="profile-form">
+
+          <label>Nombre completo</label>
+
+          <input
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Ingresa tu nombre"
+          />
+
+          <button
+            className="profile-save-btn"
+            onClick={handleUpdate}
+          >
+            Guardar cambios
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

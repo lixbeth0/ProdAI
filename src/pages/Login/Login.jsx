@@ -80,7 +80,6 @@ export default function Login() {
       // 🔑 TOKEN REAL DE GOOGLE
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
-
       //console.log("TOKEN:", token);
 
       // 💾 Guardar usuario en Firestore
@@ -92,7 +91,7 @@ export default function Login() {
           photo: user.photoURL || "",
           uid: user.uid,
           provider: "google",
-          classroomToken: token
+          classroomToken: token,
         },
         { merge: true }
       );

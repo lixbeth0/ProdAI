@@ -1,21 +1,133 @@
-.profile {
-  padding: 20px;
+.profile-page {
+  padding: 30px;
+}
+
+.profile-card {
+  max-width: 700px;
+  margin: 0 auto;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+
+  border-radius: 24px;
+  padding: 32px;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.08);
+
+  transition: .3s ease;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #4f46e5
+  );
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.profile-header h2 {
+  margin: 0;
+
+  color: var(--text-primary);
+  font-size: 28px;
+}
+
+.profile-header p {
+  margin-top: 5px;
+  color: var(--text-secondary);
+}
+
+.profile-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
-.profile input {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.profile-form label {
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
-.profile button {
-  background: #3c4aaf;
+.profile-form input {
+  padding: 14px 16px;
+
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+
+  background: var(--input-bg);
+  color: var(--text-primary);
+
+  font-size: 15px;
+
+  transition: .2s ease;
+}
+
+.profile-form input:focus {
+  outline: none;
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 4px rgba(37,99,235,.15);
+}
+
+.profile-save-btn {
+  margin-top: 12px;
+
+  background: #2563eb;
   color: white;
+
   border: none;
-  padding: 8px;
-  border-radius: 6px;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  font-size: 15px;
+  font-weight: 600;
+
   cursor: pointer;
+
+  transition: .25s ease;
+}
+
+.profile-save-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 20px rgba(37,99,235,.25);
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 22px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
 }

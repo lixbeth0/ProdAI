@@ -226,140 +226,142 @@ useEffect(() => {
         </div>
 
         {/* ================= WELCOME ================= */}
-        <div className="welcome-card">
 
-          <h2>Tu centro de productividad académica</h2>
 
-          <p>
-            Organiza, prioriza y completa tus tareas con ayuda de ProdAI.
-          </p>
-
-        </div>
-
-        <div className="welcome-card">
-
-        <h2>Asistente ProdAI</h2>
-
-        <p><b>Recomendación:</b> {aiPlan.suggestion}</p>
-
-        <hr style={{ opacity: 0.2 }} />
-
-        <p>Hoy: {aiPlan.today.length}</p>
-        <p>Urgentes: {aiPlan.urgent.length}</p>
-
-        <p style={{ marginTop: "10px" }}>
-          {aiPlan.message}
-        </p>
-
-      </div>
-
-        {/* ================= STATS ================= */}
         <div className="stats-container">
 
-          <StatsCard title="Pendientes" value={pendingTasks} />
-          <StatsCard title="Completadas" value={completedTasks} />
-          <StatsCard title="Alta prioridad" value={highPriorityTasks} />
-          <StatsCard title="Materias activas" value={subjectsCount} />
+          <StatsCard
+            title="Pendientes"
+            value={pendingTasks}
+          />
+
+          <StatsCard
+            title="Completadas"
+            value={completedTasks}
+          />
+
+          <StatsCard
+            title="Alta prioridad"
+            value={highPriorityTasks}
+          />
+
+          <StatsCard
+            title="Materias activas"
+            value={subjectsCount}
+          />
 
         </div>
 
-        <div className="welcome-card">
+        {/* ================= DASHBOARD ================= */}
 
-  <h2>📚 Materias de Classroom</h2>
+        <div className="dashboard-grid">
 
-  {courses.length === 0 ? (
-    <p>No se encontraron cursos.</p>
-  ) : (
-    courses.map(course => (
-      <p key={course.id}>
-        • {course.name}
-      </p>
-    ))
-  )}
+          {/* IA */}
 
-</div>
+          <div className="dashboard-card">
 
-<div className="welcome-card">
+            <h2>🤖 Asistente ProdAI</h2>
 
-  <h2>📝 Tareas de Classroom</h2>
+            <p>{aiPlan.suggestion}</p>
 
-  {classroomTasks.length === 0 ? (
-    <p>No hay tareas de Classroom.</p>
-  ) : (
-    classroomTasks.slice(0, 10).map(task => (
-      <p key={task.id}>
-        • {task.title} ({task.courseName})
-      </p>
-    ))
-  )}
+            <div className="dashboard-stats">
 
-</div>
+              <span>
+                Hoy: {aiPlan.today.length}
+              </span>
 
-        {/* ================= HOY ================= */}
-        <div className="welcome-card">
+              <span>
+                Urgentes: {aiPlan.urgent.length}
+              </span>
 
-          <h2>Tareas de hoy</h2>
+            </div>
 
-          {todayTasks.length === 0 ? (
-            <p>No tienes tareas para hoy </p>
-          ) : (
-            todayTasks.map(t => (
-              <p key={t.id}>• {t.title}</p>
-            ))
-          )}
+          </div>
+
+          {/* TAREAS */}
+
+          <div className="dashboard-card">
+
+            <h2>📋 Próximas tareas</h2>
+
+            <div className="dashboard-list">
+
+              {tasks
+                .filter(t => !t.completed)
+                .slice(0, 5)
+                .map(task => (
+
+                  <div
+                    key={task.id}
+                    className="dashboard-item"
+                  >
+                    {task.title}
+                  </div>
+
+                ))}
+
+            </div>
+
+          </div>
+
+          {/* CLASSROOM */}
+
+          <div className="dashboard-card">
+
+            <h2>📚 Classroom</h2>
+
+            {courses.length === 0 ? (
+
+              <p>No hay cursos conectados.</p>
+
+            ) : (
+
+              courses.slice(0, 5).map(course => (
+
+                <div
+                  key={course.id}
+                  className="dashboard-item"
+                >
+                  {course.name}
+                </div>
+
+              ))
+
+            )}
+
+          </div>
+
+          {/* ACTIVIDAD */}
+
+          <div className="dashboard-card">
+
+            <h2>⚡ Actividad reciente</h2>
+
+            {recentTasks.length === 0 ? (
+
+              <p>Sin actividad reciente.</p>
+
+            ) : (
+
+              recentTasks.map(task => (
+
+                <div
+                  key={task.id}
+                  className="dashboard-item"
+                >
+                  {task.title}
+                </div>
+
+              ))
+
+            )}
+
+          </div>
 
         </div>
 
-        {/* ================= URGENTES ================= */}
-        <div className="welcome-card">
-
-          <h2>Urgentes</h2>
-
-          {urgentTasks.length === 0 ? (
-            <p>No tienes tareas urgentes</p>
-          ) : (
-            urgentTasks.map(t => (
-              <p key={t.id}>• {t.title}</p>
-            ))
-          )}
-
         </div>
-
-        {/* ================= PRÓXIMA TAREA ================= */}
-        <div className="welcome-card">
-
-          <h2>Próxima tarea</h2>
-
-          {nextTask ? (
-            <>
-              <p><b>{nextTask.title}</b></p>
-              <p>{nextTask.dueDate}</p>
-            </>
-          ) : (
-            <p>No hay tareas próximas</p>
-          )}
-
-        </div>
-
-        {/* ================= ACTIVIDAD RECIENTE ================= */}
-        <div className="welcome-card">
-
-          <h2>Actividad reciente</h2>
-
-          {recentTasks.length === 0 ? (
-            <p>No hay actividad reciente</p>
-          ) : (
-            recentTasks.map(t => (
-              <p key={t.id}>
-                • {t.title} {t.completed ? "✅" : "⏳"}
-              </p>
-            ))
-          )}
-
-        </div>
-
-      </div>
-
+        
     </DashboardLayout>
   );
 }

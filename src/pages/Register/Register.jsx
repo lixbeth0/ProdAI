@@ -129,19 +129,30 @@ function Register() {
       await setDoc(
         doc(db, "users", user.uid),
         {
-          nombre:
-            form.nombre,
-
-          correo:
-            form.correo,
-
-          uid:
-            user.uid,
-
+          nombre: form.nombre,
+          correo: form.correo,
+          uid: user.uid,
           photo: "",
 
-          creado:
-            new Date()
+          carrera: "",
+          semestre: "",
+          universidad: "",
+
+          tema: "light",
+
+          notificaciones: {
+            tareas: true,
+            recordatorios: true,
+            resumenDiario: false
+          },
+
+          academico: {
+            metaPromedio: "",
+            horasEstudio: "",
+            materiaFavorita: ""
+          },
+
+          creado: new Date()
         }
       );
 

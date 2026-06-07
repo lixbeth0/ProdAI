@@ -1,5 +1,5 @@
 /* =========================
-   HOME GENERAL
+   HOME
 ========================= */
 
 .home {
@@ -8,357 +8,88 @@
 
   padding: 30px;
 
-  display: flex;
+  background: var(--bg-main);
 
+  color: var(--text-primary);
+
+  display: flex;
   flex-direction: column;
 
-  gap: 30px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #0f172a,
-      #111827,
-      #1e293b
-    );
+  gap: 24px;
 }
 
 /* =========================
-   TOP CARD
-========================= */
-
-.card-home {
-
-  width: 100%;
-
-  min-height: 180px;
-
-  border-radius: 28px;
-
-  padding: 35px;
-
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(99, 102, 241, 0.25),
-      rgba(168, 85, 247, 0.18)
-    );
-
-  border:
-    1px solid
-    rgba(255,255,255,0.08);
-
-  -webkit-backdrop-filter: blur(18px);
-  
-  backdrop-filter: blur(18px);
-
-  box-shadow:
-    0 10px 40px rgba(0,0,0,0.35);
-}
-
-
-/* =========================
-   DROPDOWN
-========================= */
-
-.dropdown-menu {
-
-  position: absolute;
-
-  top: 85px;
-
-  right: 0;
-
-  width: 220px;
-
-  padding: 8px;
-
-  border-radius: 20px;
-
-  background:
-    rgba(17, 24, 39, 0.98);
-
-  border:
-    1px solid
-    rgba(255,255,255,0.10);
-
-  box-shadow:
-    0 15px 40px rgba(0,0,0,0.45);
-
-  -webkit-backdrop-filter: blur(18px);
-
-  backdrop-filter: blur(18px);
-
-  z-index: 9999;
-
-  animation:
-    dropdownFade 0.25s ease;
-}
-
-/* =========================
-   ITEMS
-========================= */
-
-.dropdown-item {
-
-  padding:
-    14px 16px;
-
-  border-radius: 14px;
-
-  color: white;
-
-  font-size: 0.95rem;
-
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition: 0.25s;
-    
-  -webkit-user-select: none;
-
-  -ms-user-select: none;
-
-  user-select: none;
-}
-
-.dropdown-item:hover {
-
-  background:
-    rgba(255,255,255,0.08);
-
-  transform:
-    translateX(4px);
-}
-
-/* =========================
-   LOGOUT
-========================= */
-
-.logout {
-
-  color: #f87171;
-}
-
-.logout:hover {
-
-  background:
-    rgba(248,113,113,0.12);
-}
-
-/* =========================
-   LINE
-========================= */
-
-.dropdown-menu hr {
-
-  border: none;
-
-  height: 1px;
-
-  background:
-    rgba(255,255,255,0.08);
-
-  margin: 8px 0;
-}
-
-/* =========================
-   ANIMATION
-========================= */
-
-@keyframes dropdownFade {
-
-  from {
-
-    opacity: 0;
-
-    transform:
-      translateY(-10px);
-  }
-
-  to {
-
-    opacity: 1;
-
-    transform:
-      translateY(0);
-  }
-}
-
-/* =========================
-   BIENVENIDA
-========================= */
-
-.content-home {
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 12px;
-}
-
-.content-home h1 {
-
-  font-size: 2.5rem;
-
-  font-weight: 700;
-
-  color: white;
-
-  margin: 0;
-}
-
-.content-home p {
-
-  font-size: 1rem;
-
-  color: rgba(255,255,255,0.7);
-
-  max-width: 500px;
-
-  line-height: 1.6;
-}
-
-/* =========================
-   TOP HEADER
+   HEADER
 ========================= */
 
 .top-header {
 
-  width: 100%;
-
   display: flex;
 
   justify-content: space-between;
 
   align-items: center;
 
-  padding: 30px;
+  background: var(--bg-card);
 
-  border-radius: 28px;
+  border: 1px solid var(--border-color);
+
+  border-radius: 24px;
+
+  padding: 28px;
+
 
   background:
     linear-gradient(
       135deg,
-      rgba(99,102,241,0.18),
+      
+      rgba(99, 101, 241, 0.5),
       rgba(168,85,247,0.12)
     );
 
-  border:
-    1px solid
-    rgba(255,255,255,0.08);
-
   box-shadow:
-    0 10px 35px rgba(0,0,0,0.25);
-
-  -webkit-backdrop-filter: blur(14px);
-
-  backdrop-filter: blur(14px);
-
-  overflow: visible;
-  position: relative;
-  z-index: 100;
-}
-
-/* =========================
-   LEFT
-========================= */
-
-.top-header-left {
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 12px;
-}
-
-.welcome-badge {
-
-  width: fit-content;
-
-  padding:
-    8px 14px;
-
-  border-radius: 999px;
-
-  background:
-    rgba(255,255,255,0.08);
-
-  color: white;
-
-  font-size: 0.85rem;
-
-  font-weight: 600;
+    0 4px 20px rgba(0,0,0,.05);
 }
 
 .top-header-left h1 {
 
-  color: white;
-
-  font-size: 2.4rem;
-
   margin: 0;
 
-  font-weight: 700;
+  font-size: 2rem;
+
+  color: var(--text-primary);
 }
 
 .top-header-left p {
 
-  color:
-    rgba(255,255,255,0.75);
+  margin-top: 8px;
 
-  max-width: 550px;
-
-  line-height: 1.7;
-
-  margin: 0;
+  color: var(--text-secondary);
 }
 
 /* =========================
-   PROFILE BUTTON
+   PROFILE
 ========================= */
 
-.top-header-right {
-
-  position: relative;
-}
-
 .profile-button {
+
+  background:
+    linear-gradient(
+      135deg,
+      
+      rgba(99, 101, 241, 0.5),
+      rgba(168,85,247,0.12)
+    );
 
   display: flex;
 
   align-items: center;
 
-  gap: 15px;
+  gap: 14px;
 
-  padding:
-    12px 18px;
-
-  border: none;
-
-  border-radius: 18px;
-
-  background:
-    rgba(255,255,255,0.06);
-
+  border: 0.005 px;
+  border-radius: 50px;
   cursor: pointer;
-
-  transition: 0.3s;
-}
-
-.profile-button:hover {
-
-  background:
-    rgba(255,255,255,0.1);
 }
 
 .profile-button img {
@@ -370,50 +101,18 @@
   border-radius: 50%;
 
   object-fit: cover;
-
-  border:
-    2px solid
-    rgba(255,255,255,0.15);
 }
 
 .profile-button h4 {
 
-  color: white;
-
   margin: 0;
 
-  font-size: 1rem;
-
-  text-align: left;
+  color: var(--text-primary);
 }
 
 .profile-button span {
 
-  color:
-    rgba(255,255,255,0.6);
-
-  font-size: 0.85rem;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-  .top-header {
-
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    gap: 25px;
-  }
-
-  .top-header-left h1 {
-
-    font-size: 2rem;
-  }
+  color: var(--text-secondary);
 }
 
 /* =========================
@@ -421,232 +120,188 @@
 ========================= */
 
 .stats-container {
+  
 
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(240px, 1fr));
+    repeat(auto-fit,minmax(220px,1fr));
 
-  gap: 22px;
+  gap: 20px;
 }
-
-/* =========================
-   CARD GENÉRICA
-========================= */
 
 .stats-card {
-
-  padding: 25px;
-
-  border-radius: 24px;
-
-  background:
-    rgba(255,255,255,0.05);
-
-  border:
-    1px solid
-    rgba(255,255,255,0.06);
-
-  -webkit-backdrop-filter: blur(12px);
-  
-  backdrop-filter: blur(12px);
-
-  transition: 0.3s;
-
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.2);
-}
-
-.stats-card:hover {
-
-  transform: translateY(-4px);
-
-  background:
-    rgba(255,255,255,0.08);
-}
-
-.stats-card h3 {
-
-  color:
-    rgba(255,255,255,0.7);
-
-  font-size: 1rem;
-
-  margin-bottom: 12px;
-
-  font-weight: 500;
-}
-
-.stats-card h1 {
-
-  color: white;
-
-  font-size: 2.3rem;
-
-  font-weight: 700;
-
-  margin: 0;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-  .card-home {
-
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    gap: 25px;
-  }
-
-  .content-home h1 {
-
-    font-size: 2rem;
-  }
-
-  .stats-container {
-
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================
-   WELCOME CARD
-========================= */
-
-.welcome-card {
-
-  width: 100%;
-
-  padding: 35px;
-
-  border-radius: 28px;
 
   background:
     linear-gradient(
       135deg,
-      rgba(99, 102, 241, 0.20),
-      rgba(168, 85, 247, 0.15)
+      
+      rgba(99, 101, 241, 0.5),
+      rgba(168,85,247,0.12)
     );
 
-  border:
-    1px solid
-    rgba(255,255,255,0.08);
+  border: 1px solid var(--border-color);
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  transition: .2s;
+}
+
+.stats-card h3 {
+
+  margin: 0 0 10px;
+
+  color: var(--text-secondary);
+
+  font-size: .95rem;
+}
+
+.stats-card h1 {
+
+  margin: 0;
+
+  font-size: 2rem;
+
+  color: var(--text-primary);
+}
+
+/* =========================
+   DASHBOARD GRID
+========================= */
+
+.dashboard-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap: 24px;
+}
+
+.dashboard-card {
+
+  
+  background:
+    linear-gradient(
+      135deg,
+      
+      rgba(99, 101, 241, 0.5),
+      rgba(168,85,247,0.12)
+    );
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 24px;
+
+  padding: 24px;
+
+  min-height: 260px;
 
   box-shadow:
-    0 10px 35px rgba(0,0,0,0.25);
+    0 4px 20px rgba(0,0,0,.05);
+}
 
-  -webkit-backdrop-filter: blur(14px);
+.dashboard-card h2 {
 
-  backdrop-filter: blur(14px);
+  margin-top: 0;
+
+  color: var(--text-primary);
+}
+
+.dashboard-card p {
+
+  color: var(--text-secondary);
+
+  line-height: 1.6;
+}
+
+/* =========================
+   LISTS
+========================= */
+
+.dashboard-list {
 
   display: flex;
 
   flex-direction: column;
 
-  gap: 15px;
+  gap: 12px;
+}
 
-  animation: fadeUp 0.5s ease;
+.dashboard-item {
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background: var(--hover-bg);
 }
 
 /* =========================
-   TITLE
+   DROPDOWN
 ========================= */
 
-.welcome-card h2 {
+.dropdown-menu {
 
-  font-size: 2rem;
+  position: absolute;
 
-  font-weight: 700;
+  right: 0;
 
-  color: white;
+  top: 80px;
 
-  margin: 0;
+  width: 220px;
 
-  line-height: 1.2;
+  background: var(--bg-card);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.15);
 }
 
-/* =========================
-   TEXT
-========================= */
+.dropdown-item {
 
-.welcome-card p {
+  padding: 14px 18px;
 
-  font-size: 1rem;
+  cursor: pointer;
 
-  color:
-    rgba(255,255,255,0.75);
-
-  line-height: 1.8;
-
-  max-width: 700px;
-
-  margin: 0;
+  color: var(--text-primary);
 }
 
-/* =========================
-   HOVER
-========================= */
+.dropdown-item:hover {
 
-.welcome-card:hover {
-
-  transform: translateY(-3px);
-
-  transition: 0.3s;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(99, 102, 241, 0.28),
-      rgba(168, 85, 247, 0.20)
-    );
+  background: var(--hover-bg);
 }
 
-/* =========================
-   ANIMATION
-========================= */
+.logout {
 
-@keyframes fadeUp {
-
-  from {
-
-    opacity: 0;
-
-    transform:
-      translateY(20px);
-  }
-
-  to {
-
-    opacity: 1;
-
-    transform:
-      translateY(0);
-  }
+  color: #ef4444;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
-  .welcome-card {
+  .dashboard-grid {
 
-    padding: 25px;
+    grid-template-columns: 1fr;
   }
 
-  .welcome-card h2 {
+  .top-header {
 
-    font-size: 1.6rem;
-  }
+    flex-direction: column;
 
-  .welcome-card p {
+    align-items: flex-start;
 
-    font-size: 0.95rem;
+    gap: 20px;
   }
 }

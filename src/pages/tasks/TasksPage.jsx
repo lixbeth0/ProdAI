@@ -337,21 +337,34 @@ function TasksPage() {
 
           <div className="tasks-header">
 
-            <div>
+              <div>
+                <h1>Mis Actividades</h1>
 
-              <h2>
-                Mis Actividades
-              </h2>
+                <p>
+                  Gestiona tus tareas manuales y sincronizadas desde Classroom
+                </p>
+              </div>
 
-              <p>
-                Seguimiento de actividades académicas
-              </p>
+              <div className="tasks-stats">
 
-            </div>
+                <div className="stat-card">
+                  <span>{allTasks.length}</span>
+                  <p>Total</p>
+                </div>
 
-            <div className="tasks-count">
-              {allTasks.length} tareas
-            </div>
+                <div className="stat-card">
+                  <span>
+                    {
+                      allTasks.filter(
+                        task => !task.completed
+                      ).length
+                    }
+                  </span>
+
+                  <p>Pendientes</p>
+                </div>
+
+              </div>
 
           </div>
 
