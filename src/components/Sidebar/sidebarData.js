@@ -17,9 +17,9 @@ export const sidebarData = [
     path: "/ai",
   },
   {
-  title: "Classroom",
+  title: "Area de estudio",
   icon: BarChart3,
-  path: "/Classroom",
+  path: "/study",
   },
   {
   title: "Actividades",

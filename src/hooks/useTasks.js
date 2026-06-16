@@ -1,11 +1,15 @@
 import {
-
   useEffect,
   useState
-
 } from "react";
 
-import { auth } from "../firebase/firebase";
+import {
+  onAuthStateChanged
+} from "firebase/auth";
+
+import {
+  auth
+} from "../firebase/firebase";
 
 import {
   subscribeToTasks
@@ -21,23 +25,58 @@ export const useTasks = () => {
 
   useEffect(() => {
 
-    if (!auth.currentUser)
-      return;
+    let unsubscribeTasks = null;
 
-    const unsubscribe =
-      subscribeToTasks(
+    const unsubscribeAuth =
+      onAuthStateChanged(
 
-        auth.currentUser.uid,
+        auth,
 
-        (tasksData) => {
+        (user) => {
 
-          setTasks(tasksData);
+          if (!user) {
 
-          setLoading(false);
+            setTasks([]);
+            setLoading(false);
+
+            if (
+              unsubscribeTasks
+            ) {
+              unsubscribeTasks();
+            }
+
+            return;
+          }
+
+          setLoading(true);
+
+          unsubscribeTasks =
+            subscribeToTasks(
+
+              user.uid,
+
+              (tasksData) => {
+
+                setTasks(
+                  tasksData
+                );
+
+                setLoading(false);
+              }
+            );
         }
       );
 
-    return () => unsubscribe();
+    return () => {
+
+      unsubscribeAuth();
+
+      if (
+        unsubscribeTasks
+      ) {
+        unsubscribeTasks();
+      }
+    };
 
   }, []);
 
@@ -46,5 +85,6 @@ export const useTasks = () => {
     tasks,
 
     loading
+
   };
 };

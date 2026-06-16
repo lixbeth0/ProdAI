@@ -1,0 +1,470 @@
+/* =========================================
+   STUDY PAGE - PROD AI
+   Compatible con tema claro y oscuro
+========================================= */
+
+/* =========================================
+   VARIABLES GLOBALES
+========================================= */
+
+:root {
+  --study-bg: #f8fafc;
+  --study-card: #ffffff;
+
+  --study-text: #1f2937;
+  --study-text-secondary: #64748b;
+
+  --study-border: #e2e8f0;
+
+  --study-primary: #6366f1;
+  --study-primary-hover: #4f46e5;
+
+  --study-success: #10b981;
+
+  --study-shadow:
+    0 10px 30px rgba(
+      0,
+      0,
+      0,
+      0.08
+    );
+}
+
+/* =========================================
+   TEMA OSCURO
+========================================= */
+
+.dark-theme {
+  --study-bg: #0f172a;
+  --study-card: #1e293b;
+
+  --study-text: #f8fafc;
+  --study-text-secondary: #cbd5e1;
+
+  --study-border: #334155;
+
+  --study-primary: #818cf8;
+  --study-primary-hover: #6366f1;
+
+  --study-shadow:
+    0 10px 30px rgba(
+      0,
+      0,
+      0,
+      0.3
+    );
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.study-container {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 30px;
+
+  color: var(--study-text);
+
+  transition: all 0.3s ease;
+}
+
+/* =========================================
+   TITULO
+========================================= */
+
+.study-title {
+  font-size: 2rem;
+
+  font-weight: 700;
+
+  color: var(--study-text);
+
+  margin-bottom: 25px;
+}
+
+/* =========================================
+   TEXTAREA
+========================================= */
+
+.study-textarea {
+  width: 100%;
+
+  min-height: 250px;
+
+  padding: 18px;
+
+  resize: vertical;
+
+  font-size: 15px;
+
+  border-radius: 16px;
+
+  border: 2px solid
+    var(--study-border);
+
+  background:
+    var(--study-card);
+
+  color:
+    var(--study-text);
+
+  transition: all 0.3s ease;
+}
+
+.study-textarea::placeholder {
+  color:
+    var(--study-text-secondary);
+}
+
+.study-textarea:focus {
+  outline: none;
+
+  border-color:
+    var(--study-primary);
+
+  box-shadow:
+    0 0 0 4px rgba(
+      99,
+      102,
+      241,
+      0.15
+    );
+}
+
+/* =========================================
+   SUBIR PDF
+========================================= */
+
+.pdf-upload {
+  margin-top: 20px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  background:
+    var(--study-card);
+
+  border: 2px dashed
+    var(--study-border);
+
+  transition: all 0.3s ease;
+}
+
+.pdf-upload label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  font-weight: 600;
+
+  color:
+    var(--study-text);
+}
+
+.pdf-upload input {
+  width: 100%;
+}
+
+.pdf-upload p {
+  margin-top: 10px;
+
+  color:
+    var(--study-primary);
+
+  font-weight: 600;
+}
+
+/* =========================================
+   BOTON GENERAR QUIZ
+========================================= */
+
+.study-button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6
+    );
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.study-button:hover {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(
+      99,
+      102,
+      241,
+      0.25
+    );
+}
+
+.study-button:disabled {
+  opacity: 0.7;
+
+  cursor: not-allowed;
+}
+
+/* =========================================
+   CONTENEDOR DEL QUIZ
+========================================= */
+
+.quiz-container {
+  margin-top: 30px;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+  background:
+    var(--study-card);
+
+  color:
+    var(--study-text);
+
+  box-shadow:
+    var(--study-shadow);
+
+  transition: all 0.3s ease;
+}
+
+.quiz-container h2 {
+  color:
+    var(--study-primary);
+
+  margin-bottom: 15px;
+}
+
+.quiz-container h3 {
+  margin-top: 10px;
+
+  margin-bottom: 20px;
+
+  color:
+    var(--study-text);
+}
+
+/* =========================================
+   OPCIONES DEL QUIZ
+========================================= */
+
+.quiz-option {
+  width: 100%;
+
+  margin-bottom: 12px;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  border: 2px solid
+    var(--study-border);
+
+  background:
+    var(--study-card);
+
+  color:
+    var(--study-text);
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.quiz-option:hover {
+  border-color:
+    var(--study-primary);
+
+  background:
+    rgba(
+      99,
+      102,
+      241,
+      0.08
+    );
+}
+
+/* =========================================
+   RESULTADO DEL QUIZ
+========================================= */
+
+.study-result {
+  margin-top: 30px;
+
+  padding: 30px;
+
+  text-align: center;
+
+  border-radius: 20px;
+
+  background:
+    var(--study-card);
+
+  color:
+    var(--study-text);
+
+  box-shadow:
+    var(--study-shadow);
+
+  transition: all 0.3s ease;
+}
+
+.study-result h2 {
+  color:
+    var(--study-success);
+}
+
+.study-result h3 {
+  font-size: 2rem;
+
+  margin-top: 10px;
+}
+
+/* =========================================
+   ESTADISTICAS
+========================================= */
+
+.stats-card {
+  margin-top: 30px;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6
+    );
+
+  box-shadow:
+    0 10px 30px rgba(
+      99,
+      102,
+      241,
+      0.25
+    );
+}
+
+.stats-card h2 {
+  margin-bottom: 15px;
+}
+
+.stats-card p {
+  font-size: 16px;
+
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   HISTORIAL
+========================================= */
+
+.history-container {
+  margin-top: 30px;
+}
+
+.history-container h2 {
+  margin-bottom: 20px;
+
+  color:
+    var(--study-text);
+}
+
+.history-card {
+  padding: 20px;
+
+  margin-bottom: 15px;
+
+  border-radius: 18px;
+
+  background:
+    var(--study-card);
+
+  color:
+    var(--study-text);
+
+  box-shadow:
+    var(--study-shadow);
+
+  transition: all 0.3s ease;
+}
+
+.history-card:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+/* =========================================
+   SCROLLBAR (OPCIONAL)
+========================================= */
+
+.study-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.study-textarea::-webkit-scrollbar-thumb {
+  background:
+    var(--study-primary);
+
+  border-radius: 10px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .study-container {
+    padding: 15px;
+  }
+
+  .study-title {
+    font-size: 1.6rem;
+  }
+
+  .quiz-container,
+  .study-result,
+  .stats-card,
+  .history-card {
+    padding: 20px;
+  }
+
+}

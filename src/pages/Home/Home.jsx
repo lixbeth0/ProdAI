@@ -270,6 +270,8 @@ useEffect(() => {
                 Hoy: {aiPlan.today.length}
               </span>
 
+              <p> </p>
+
               <span>
                 Urgentes: {aiPlan.urgent.length}
               </span>
@@ -305,7 +307,6 @@ useEffect(() => {
           </div>
 
           {/* CLASSROOM */}
-
           <div className="dashboard-card">
 
             <h2>📚 Classroom</h2>
@@ -316,16 +317,20 @@ useEffect(() => {
 
             ) : (
 
-              courses.slice(0, 5).map(course => (
+              <div className="classroom-scroll">
 
-                <div
-                  key={course.id}
-                  className="dashboard-item"
-                >
-                  {course.name}
-                </div>
+                {courses.map(course => (
 
-              ))
+                  <div
+                    key={course.id}
+                    className="dashboard-item"
+                  >
+                    {course.name}
+                  </div>
+
+                ))}
+
+              </div>
 
             )}
 

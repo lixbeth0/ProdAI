@@ -31,7 +31,7 @@ const { user } = useAuth();
 
 const [section, setSection] = useState("perfil");
 
-const [tema, setTema] = useState("dark");
+const [tema, setTema] = useState("");
 
 const [notificaciones, setNotificaciones] = useState({
   tareas: true,
@@ -101,10 +101,6 @@ useEffect(() => {
 
       setClassroomConnected(
         !!data.classroomToken
-      );
-
-      setClassroomEmail(
-        data.classroomEmail || ""
       );
 
       setLastSync(
@@ -214,22 +210,6 @@ const cambiarPassword = async () => {
   );
 }; 
 
-const desconectarClassroom = async () => {
-
-  await updateDoc(
-    doc(db, "users", user.uid),
-    {
-      classroomToken: null,
-      classroomEmail: null,
-      coursesCount: 0
-    }
-  );
-
-  setClassroomConnected(false);
-  setClassroomEmail("");
-
-  alert("Classroom desconectado");
-};
 
 const sincronizarClassroom = async () => {
 
@@ -415,13 +395,6 @@ const sincronizarClassroom = async () => {
                         className="secondary-btn"
                       >
                         Cambiar cuenta
-                      </button>
-
-                      <button
-                        className="danger-btn"
-                        onClick={desconectarClassroom}
-                      >
-                        Desconectar
                       </button>
 
                     </div>

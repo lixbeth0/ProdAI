@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+/*import { useEffect, useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
 //import "./ClassroomPage.css";
 import { getCourses, getCourseWork } from "../../api/classroom";
@@ -183,8 +183,8 @@ for (const task of allTasks) {
   return (
     <DashboardLayout>
       <div className="home">
-
-        {/* ================= HEADER ================= */}
+/*
+        {/* ================= HEADER ================= /}
         <div className="top-header">
 
           <div className="top-header-left">
@@ -199,7 +199,7 @@ for (const task of allTasks) {
 
         </div>
 
-        {/* ================= RESUMEN ================= */}
+        {/* ================= RESUMEN ================= /}
         <div className="welcome-card">
 
           <h2>Resumen</h2>
@@ -214,21 +214,21 @@ for (const task of allTasks) {
 
         </div>
 
-        {/* ================= LOADING ================= */}
+        {/* ================= LOADING ================= /}
         {loading && (
           <div className="welcome-card">
             <p>Cargando Classroom...</p>
           </div>
         )}
 
-        {/* ================= ERROR ================= */}
+        {/* ================= ERROR ================= /}
         {error && (
           <div className="welcome-card">
             <p style={{ color: "red" }}>{error}</p>
           </div>
         )}
 
-        {/* ================= CURSOS ================= */}
+        {/* ================= CURSOS ================= /}
         {!loading && !error && (
           <>
             <div className="welcome-card">
@@ -264,7 +264,7 @@ for (const task of allTasks) {
           </>
         )}
 
-        {/* ================= TAREAS ================= */}
+        {/* ================= TAREAS ================= /}
         {!loading && !error && (
           <>
             <div className="welcome-card">
@@ -305,4 +305,4 @@ for (const task of allTasks) {
       </div>
     </DashboardLayout>
   );
-}
+}*/

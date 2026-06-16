@@ -80,21 +80,43 @@ export default function Login() {
       // 🔑 TOKEN REAL DE GOOGLE
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
-      //console.log("TOKEN:", token);
 
-      // 💾 Guardar usuario en Firestore
-      await setDoc(
-        doc(db, "users", user.uid),
-        {
-          nombre: user.displayName || "Sin nombre",
-          correo: user.email,
-          photo: user.photoURL || "",
-          uid: user.uid,
-          provider: "google",
-          classroomToken: token,
-        },
-        { merge: true }
-      );
+      //console.log("TOKEN:", token);
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        nombre: user.displayName || "Sin nombre",
+
+        correo: user.email,
+
+        photo: user.photoURL || "",
+
+        uid: user.uid,
+
+        provider: "google",
+
+        classroomToken: token,
+
+        // =====================
+        // CONFIGURACIÓN INICIAL
+        // =====================
+
+        tema: "light",
+
+        availableSubjects: [],
+
+        selectedSubjects: [],
+
+        notificaciones: {
+          tareas: true,
+          recordatorios: true,
+          resumenDiario: false
+        }
+      },
+      {
+        merge: true
+      }
+    );
 
       navigate("/home");
 

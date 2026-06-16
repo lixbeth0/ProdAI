@@ -10,6 +10,7 @@ import ClassroomPage from "./pages/ClassroomPage/ClassroomPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
 import SettingsPage from "./pages/settings/SettingsPage";
+import StudyPage from "./pages/study/StudyPage";
 
 function App() {
   const { user } = useAuth();
@@ -67,10 +68,10 @@ function App() {
       />
 
       <Route
-        path="/Classroom"
+        path="/study"
         element={
           <ProtectedRoute user={user}>
-            <ClassroomPage />
+            <StudyPage />
           </ProtectedRoute>
         }
       />

@@ -9,7 +9,8 @@ import {
   serverTimestamp,
   updateDoc,
   deleteDoc,
-  doc
+  doc,
+  arrayUnion
 
 } from "firebase/firestore";
 
@@ -56,7 +57,25 @@ export const subscribeToTasks = (
 export const createTask = async (
   taskData
 ) => {
+if (
+  taskData.subject?.trim() &&
+  taskData.userId
+) {
 
+  await updateDoc(
+    doc(
+      db,
+      "users",
+      taskData.userId
+    ),
+    {
+      availableSubjects:
+        arrayUnion(
+          taskData.subject
+        )
+    }
+  );
+}
   try {
 
     await addDoc(

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useActivities } from "../../hooks/useActivities";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 import "./TasksPage.css";
@@ -15,6 +14,7 @@ import { auth } from "../../firebase/firebase";
 
 import TaskCard from "../../components/tasks/TaskCard";
 
+
 function TasksPage() {
 
   // =========================
@@ -22,21 +22,7 @@ function TasksPage() {
   // =========================
   const { tasks, loading } = useTasks();
 
-  // =========================
-  // TAREAS DE CLASSROOM
-  // =========================
-  const {
-    activities,
-    loading: loadingActivities
-  } = useActivities();
-
-  // =========================
-  // UNIR TODAS LAS TAREAS
-  // =========================
-  const allTasks = [
-    ...tasks,
-    ...activities
-  ];
+  const allTasks = tasks;
 
   // =========================
   // MATERIAS ÚNICAS
@@ -67,6 +53,10 @@ function TasksPage() {
   // CREAR TAREA
   // =========================
   const handleCreateTask = async () => {
+
+
+console.log("TASKS:", tasks);
+console.log("ALL TASKS:", allTasks);  
 
     setError("");
 
@@ -140,23 +130,6 @@ function TasksPage() {
 
   };
 
-  // =========================
-  // LOADING
-  // =========================
-  if (
-    loading ||
-    loadingActivities
-  ) {
-
-    return (
-      <DashboardLayout>
-        <h2 style={{ color: "white" }}>
-          Cargando tareas...
-        </h2>
-      </DashboardLayout>
-    );
-
-  }
 
   return (
 

@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children }) {
   }, []);
 
   if (loading) {
-    return <div style={{ padding: "20px" }}>Cargando sesión...</div>;
+    return 
   }
 
   return user ? children : <Navigate to="/" />;
