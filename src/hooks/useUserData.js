@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 
+import { useAuth }
+from "../contexts/AuthContext";
+
 import {
   getUserData
-} from "../services/userService";
+}
+from "../services/userService";
 
 export const useUserData = () => {
+
+  const { user } = useAuth();
 
   const [userData, setUserData] =
     useState(null);
@@ -16,6 +22,11 @@ export const useUserData = () => {
 
     const loadUser = async () => {
 
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       const data =
         await getUserData();
 
@@ -26,7 +37,7 @@ export const useUserData = () => {
 
     loadUser();
 
-  }, []);
+  }, [user]);
 
   return {
     userData,

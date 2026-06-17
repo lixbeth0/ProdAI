@@ -9,9 +9,7 @@ import {
 function TaskCard({
 
   task,
-
   onToggle,
-
   onDelete
 
 }) {
@@ -26,7 +24,10 @@ function TaskCard({
       }
     >
 
-      {/* TOP */}
+      {/* =========================
+          CABECERA
+      ========================= */}
+
       <div className="task-top">
 
         <div className="task-status">
@@ -46,19 +47,14 @@ function TaskCard({
 
         </div>
 
-        {/* ACTIONS */}
         <div className="task-actions">
 
-          {/* EDIT */}
-          <button
-            className="edit-btn"
-          >
+          <button className="edit-btn">
 
             <Pencil size={18} />
 
           </button>
 
-          {/* DELETE */}
           <button
             className="delete-btn"
             onClick={() =>
@@ -74,35 +70,50 @@ function TaskCard({
 
       </div>
 
-      {/* DESCRIPTION */}
+      {/* =========================
+          MATERIA
+      ========================= */}
+
+      {(task.subject || task.courseName) && (
+
+        <div className="task-subject">
+
+          📚 {task.subject || task.courseName}
+
+        </div>
+
+      )}
+
+      {/* =========================
+          DESCRIPCIÓN
+      ========================= */}
+
       <p className="task-description">
 
-        {task.description}
+        {task.description || "Sin descripción"}
 
       </p>
 
-      {/* FOOTER */}
+      {/* =========================
+          FOOTER
+      ========================= */}
+
       <div className="task-footer">
 
-        <span className="task-subject">
-
-          {task.subject}
-
-        </span>
-
         <span
-          className={
-            `priority ${task.priority}`
-          }
+          className={`priority ${task.priority}`}
         >
 
-          {task.priority}
+          {task.priority || "Media"}
 
         </span>
 
       </div>
 
-      {/* DATE */}
+      {/* =========================
+          FECHA
+      ========================= */}
+
       <div className="task-date">
 
         <CalendarDays size={16} />
@@ -119,6 +130,7 @@ function TaskCard({
       </div>
 
     </div>
+
   );
 }
 

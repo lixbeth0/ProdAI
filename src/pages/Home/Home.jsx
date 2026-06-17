@@ -1,172 +1,266 @@
 import "./Home.css";
-import { generatePlan } from "../../components/ai/prodaiAssistant";
-import { useState, useMemo } from "react";
+
+import { useState, useMemo, useEffect } from "react";
+
 import { auth } from "../../firebase/firebase";
 import { signOut } from "firebase/auth";
+
 import { useNavigate } from "react-router-dom";
-import AIChat from "../../components/ai/AIChat";
+
+import { generatePlan } from "../../components/ai/prodaiAssistant";
+
+import DashboardLayout from "../../layouts/DashboardLayout";
+import StatsCard from "../../components/StatsCard/StatsCard";
+
 import { useUserData } from "../../hooks/useUserData";
 import { useTasks } from "../../hooks/useTasks";
-import { useEffect } from "react";
 
-import {
-  getCourses,
-  getCourseWork
-} from "../../api/classroom";
-
-import StatsCard from "../../components/StatsCard/StatsCard";
-import DashboardLayout from "../../layouts/DashboardLayout";
-
+import { syncClassroom } from "../../services/syncClassroomService";
 
 function Home() {
+const todayDate = new Date();
+todayDate.setHours(0, 0, 0, 0);
+
+
+const { userData } = useUserData();
+
+const { tasks } = useTasks();
+
+// PRIMERO DECLARAS EL STATE
+const [selectedCourses, setSelectedCourses] =
+  useState([]);
+
+// DESPUÉS EL useEffect
+useEffect(() => {
+
+  if (!userData) return;
+
+  setSelectedCourses(
+    userData.selectedCourses || []
+  );
+
+}, [userData]);
+
+// DESPUÉS EL FILTRO
+const filteredTasks = tasks.filter(task => {
+
+  if (task.source !== "classroom") {
+    return true;
+  }
+
+  if (selectedCourses.length === 0) {
+    return true;
+  }
+
+  return selectedCourses.includes(
+    task.courseId
+  );
+
+});
+
+// DESPUÉS activeTasks
+const activeTasks = filteredTasks.filter(task => {
+
+  if (task.completed) return true;
+
+  if (!task.dueDate) return true;
+
+  const taskDate = new Date(task.dueDate);
+  taskDate.setHours(0, 0, 0, 0);
+
+  if (
+    task.source === "classroom" &&
+    taskDate < todayDate
+  ) {
+    return false;
+  }
+
+  return true;
+
+});
 
   const navigate = useNavigate();
 
-  // 🔥 DATA REAL
-  const { tasks } = useTasks();
-  const [courses, setCourses] = useState([]);
-  const [classroomTasks, setClassroomTasks] = useState([]); 
 
-  const { userData, loading } = useUserData();
+  // =========================================
+  // DEBUG (PUEDES ELIMINARLO DESPUÉS)
+  // =========================================
 
-  // DEBUG
-useEffect(() => {
-  console.log("USER DATA:", userData);
-  console.log("TOKEN:", userData?.classroomToken);
-}, [userData]);
+  useEffect(() => {
 
-// CLASSROOM
-useEffect(() => {
+    console.log("USER DATA:", userData);
 
-  const loadClassroom = async () => {
+    console.log(
+      "CLASSROOM TOKEN:",
+      userData?.classroomToken
+    );
 
-    if (!userData?.classroomToken) return;
+  }, [userData]);
 
-    try {
+  // =========================================
+  // MENÚ PERFIL
+  // =========================================
 
-      const coursesData = await getCourses(
-        userData.classroomToken
-      );
+  const [menuOpen, setMenuOpen] =
+    useState(false);
 
-      setCourses(coursesData);
+  // =========================================
+  // FECHA DE HOY
+  // =========================================
 
-      let allTasks = [];
+  const today =
+    new Date().toISOString().split("T")[0];
 
-      for (const course of coursesData) {
+  // =========================================
+  // ESTADÍSTICAS
+  // =========================================
 
-        const works = await getCourseWork(
-          course.id,
-          userData.classroomToken
-        );
-
-        allTasks.push(
-          ...works.map(work => ({
-            ...work,
-            courseName: course.name
-          }))
-        );
-      }
-
-      setClassroomTasks(allTasks);
-
-    } catch (error) {
-      console.error(
-        "Error cargando Classroom:",
-        error
-      );
-    }
-  };
-
-  loadClassroom();
-
-}, [userData]);
-
-  // 🔥 DROPDOWN
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  // 📅 HOY
-  const today = new Date().toISOString().split("T")[0];
-
-  // 🧠 DATOS INTELIGENTES
   const completedTasks = useMemo(
-    () => tasks.filter(t => t.completed).length,
-    [tasks]
+    () =>
+      activeTasks.filter(task => task.completed)
+        .length,
+    [activeTasks]
   );
 
   const pendingTasks = useMemo(
-    () => tasks.filter(t => !t.completed).length,
-    [tasks]
+    () =>
+      activeTasks.filter(task => !task.completed)
+        .length,
+    [activeTasks]
   );
 
   const highPriorityTasks = useMemo(
-    () => tasks.filter(t => t.priority === "Alta" && !t.completed).length,
-    [tasks]
+    () =>
+      activeTasks.filter(
+        task =>
+          task.priority === "Alta" &&
+          !task.completed
+      ).length,
+    [activeTasks]
   );
 
   const subjectsCount = useMemo(
-    () => new Set(tasks.map(t => t.subject)).size,
-    [tasks]
+    () =>
+      new Set(
+        activeTasks.map(task => task.subject)
+      ).size,
+    [activeTasks]
   );
 
-  // 📅 TAREAS DE HOY
+  // =========================================
+  // TAREAS DE HOY
+  // =========================================
+
   const todayTasks = useMemo(
-    () => tasks.filter(t => t.dueDate === today && !t.completed),
-    [tasks]
+    () =>
+      activeTasks.filter(
+        task =>
+          task.dueDate === today &&
+          !task.completed
+      ),
+    [activeTasks, today]
   );
 
-  // ⚠ URGENTES
+  // =========================================
+  // TAREAS URGENTES
+  // =========================================
+
   const urgentTasks = useMemo(
-    () => tasks.filter(t => t.priority === "Alta" && !t.completed),
-    [tasks]
+    () =>
+      activeTasks.filter(
+        task =>
+          task.priority === "Alta" &&
+          !task.completed
+      ),
+    [activeTasks]
   );
 
-  // 🧭 PRÓXIMA TAREA
+  // =========================================
+  // PRÓXIMA TAREA
+  // =========================================
+
   const nextTask = useMemo(() => {
-    return tasks
-      .filter(t => !t.completed && t.dueDate)
-      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
-  }, [tasks]);
 
-  // ⚡ ACTIVIDAD RECIENTE
+    return activeTasks
+      .filter(
+        task =>
+          !task.completed &&
+          task.dueDate
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.dueDate) -
+          new Date(b.dueDate)
+      )[0];
+
+  }, [activeTasks]);
+
+  // =========================================
+  // ACTIVIDAD RECIENTE
+  // =========================================
+
   const recentTasks = useMemo(() => {
-    return tasks
-      .slice()
-      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-      .slice(0, 5);
-  }, [tasks]);
 
-  // 🔥 LOGOUT
-  const logout = async () => {
-    await signOut(auth);
-    navigate("/");
-  };
+    return activeTasks
+      .slice()
+      .sort(
+        (a, b) =>
+          (b.createdAt || 0) -
+          (a.createdAt || 0)
+      )
+      .slice(0, 5);
+
+  }, [activeTasks]);
+
+  // =========================================
+  // IA
+  // =========================================
 
   const aiPlan = useMemo(() => {
-  return generatePlan(tasks);
-  }, [tasks]);
 
-  // ⏳ LOADING
-  if (loading) return <h2>Cargando...</h2>;
+    return generatePlan(activeTasks);
+
+  }, [activeTasks]);
+
+  // =========================================
+  // CERRAR SESIÓN
+  // =========================================
+
+  const logout = async () => {
+
+    await signOut(auth);
+
+    navigate("/");
+
+  };
 
   return (
+
     <DashboardLayout>
 
       <div className="home">
 
-        {/* ================= HEADER ================= */}
+        {/* ===================================== */}
+        {/* HEADER */}
+        {/* ===================================== */}
+
         <div className="top-header">
 
           <div className="top-header-left">
 
             <h1>
+
               Hola,{" "}
+
               {userData?.nombre ||
                 auth.currentUser?.displayName ||
                 "Usuario"}
+
             </h1>
 
             <p>
-              Organiza tus tareas y mejora tu productividad académica.
+              Organiza tus tareas y mejora tu
+              productividad académica.
             </p>
 
           </div>
@@ -175,36 +269,51 @@ useEffect(() => {
 
             <button
               className="profile-button"
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={() =>
+                setMenuOpen(!menuOpen)
+              }
             >
 
               <img
                 src={
                   userData?.photo ||
                   auth.currentUser?.photoURL ||
-                  `https://ui-avatars.com/api/?name=${userData?.nombre || "User"}`
+                  `https://ui-avatars.com/api/?name=${
+                    userData?.nombre ||
+                    "User"
+                  }`
                 }
                 alt="user"
               />
 
               <div>
+
                 <h4>
+
                   {userData?.nombre ||
-                    auth.currentUser?.displayName ||
+                    auth.currentUser
+                      ?.displayName ||
                     "Usuario"}
+
                 </h4>
 
-                <span>{auth.currentUser?.email}</span>
+                <span>
+                  {auth.currentUser?.email}
+                </span>
+
               </div>
 
             </button>
 
             {menuOpen && (
+
               <div className="dropdown-menu">
 
                 <p
                   className="dropdown-item"
-                  onClick={() => navigate("/profile")}
+                  onClick={() =>
+                    navigate("/profile")
+                  }
                 >
                   Perfil
                 </p>
@@ -219,14 +328,16 @@ useEffect(() => {
                 </p>
 
               </div>
+
             )}
 
           </div>
 
         </div>
 
-        {/* ================= WELCOME ================= */}
-
+        {/* ===================================== */}
+        {/* STATS */}
+        {/* ===================================== */}
 
         <div className="stats-container">
 
@@ -252,7 +363,9 @@ useEffect(() => {
 
         </div>
 
-        {/* ================= DASHBOARD ================= */}
+        {/* ===================================== */}
+        {/* DASHBOARD */}
+        {/* ===================================== */}
 
         <div className="dashboard-grid">
 
@@ -260,36 +373,43 @@ useEffect(() => {
 
           <div className="dashboard-card">
 
-            <h2>🤖 Asistente ProdAI</h2>
+            <h2>
+              🤖 Asistente ProdAI
+            </h2>
 
-            <p>{aiPlan.suggestion}</p>
+            <p>
+              {aiPlan.suggestion}
+            </p>
 
             <div className="dashboard-stats">
 
               <span>
-                Hoy: {aiPlan.today.length}
+                Hoy: {todayTasks.length}
               </span>
 
-              <p> </p>
-
               <span>
-                Urgentes: {aiPlan.urgent.length}
+                Urgentes: {urgentTasks.length}
               </span>
 
             </div>
 
           </div>
 
-          {/* TAREAS */}
+          {/* PRÓXIMAS TAREAS */}
 
           <div className="dashboard-card">
 
-            <h2>📋 Próximas tareas</h2>
+            <h2>
+              📋 Próximas tareas
+            </h2>
 
             <div className="dashboard-list">
 
-              {tasks
-                .filter(t => !t.completed)
+              {activeTasks
+                .filter(
+                  task =>
+                    !task.completed
+                )
                 .slice(0, 5)
                 .map(task => (
 
@@ -306,45 +426,49 @@ useEffect(() => {
 
           </div>
 
-          {/* CLASSROOM */}
+          {/* PRÓXIMA ENTREGA */}
+
           <div className="dashboard-card">
 
-            <h2>📚 Classroom</h2>
+            <h2>
+              ⏰ Próxima entrega
+            </h2>
 
-            {courses.length === 0 ? (
+            {nextTask ? (
 
-              <p>No hay cursos conectados.</p>
+              <>
+                <p>
+                  {nextTask.title}
+                </p>
+
+                <small>
+                  {nextTask.dueDate}
+                </small>
+              </>
 
             ) : (
 
-              <div className="classroom-scroll">
-
-                {courses.map(course => (
-
-                  <div
-                    key={course.id}
-                    className="dashboard-item"
-                  >
-                    {course.name}
-                  </div>
-
-                ))}
-
-              </div>
+              <p>
+                No hay tareas próximas.
+              </p>
 
             )}
 
           </div>
 
-          {/* ACTIVIDAD */}
+          {/* ACTIVIDAD RECIENTE */}
 
           <div className="dashboard-card">
 
-            <h2>⚡ Actividad reciente</h2>
+            <h2>
+              ⚡ Actividad reciente
+            </h2>
 
             {recentTasks.length === 0 ? (
 
-              <p>Sin actividad reciente.</p>
+              <p>
+                Sin actividad reciente.
+              </p>
 
             ) : (
 
@@ -365,9 +489,10 @@ useEffect(() => {
 
         </div>
 
-        </div>
-        
+      </div>
+
     </DashboardLayout>
+
   );
 }
 

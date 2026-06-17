@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 import "./TasksPage.css";
@@ -9,6 +9,13 @@ import {
   deleteTask
 } from "../../services/taskService";
 
+import {
+  doc,
+  getDoc
+} from "firebase/firestore";
+
+import { db } from "../../firebase/firebase";
+
 import { useTasks } from "../../hooks/useTasks";
 import { auth } from "../../firebase/firebase";
 
@@ -17,24 +24,17 @@ import TaskCard from "../../components/tasks/TaskCard";
 
 function TasksPage() {
 
-  // =========================
-  // TAREAS MANUALES
-  // =========================
-  const { tasks, loading } = useTasks();
-
-  const allTasks = tasks;
 
   // =========================
-  // MATERIAS ÚNICAS
-  // (manuales + classroom)
+  // TAREAS
   // =========================
-  const subjects = [
-    ...new Set(
-      allTasks
-        .map(t => t.subject)
-        .filter(Boolean)
-    )
-  ];
+  const { tasks } = useTasks();
+console.log(tasks[0]);
+  // =========================
+  // MATERIAS SELECCIONADAS
+  // =========================
+  const [selectedCourses, setSelectedCourses] =
+    useState([]);
 
   // =========================
   // FORM STATE
@@ -48,6 +48,79 @@ function TasksPage() {
 
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
+
+  // =========================
+  // CARGAR CONFIGURACIÓN
+  // =========================
+  useEffect(() => {
+
+    const loadSettings = async () => {
+
+      if (!auth.currentUser) return;
+
+      const snap = await getDoc(
+        doc(
+          db,
+          "users",
+          auth.currentUser.uid
+        )
+      );
+
+      if (!snap.exists()) return;
+
+      const data = snap.data();
+
+      setSelectedCourses(
+        data.selectedCourses || []
+      );
+
+    };
+
+    loadSettings();
+
+  }, []);
+
+  // =========================
+  // FILTRO DE TAREAS
+  // =========================
+  const allTasks = tasks.filter(task => {
+
+    console.log("SELECTED COURSES:", selectedCourses);
+
+    const classroomTasks = tasks.filter(
+      t => t.source === "classroom"
+    );
+
+    console.log(
+      "PRIMERA TAREA CLASSROOM:",
+      classroomTasks[0]
+    );
+
+    if (task.source !== "classroom") {
+      return true;
+    }
+
+    if (selectedCourses.length === 0) {
+      return true;
+    }
+
+    return selectedCourses.includes(
+      task.courseId
+    );
+
+  });
+
+  // =========================
+  // MATERIAS ÚNICAS
+  // (manuales + classroom)
+  // =========================
+  const subjects = [
+    ...new Set(
+      allTasks
+        .map(t => t.subject)
+        .filter(Boolean)
+    )
+  ];
 
   // =========================
   // CREAR TAREA
@@ -129,6 +202,68 @@ console.log("ALL TASKS:", allTasks);
     await deleteTask(taskId);
 
   };
+  
+// =========================
+// FECHA ACTUAL
+// =========================
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+// =========================
+// PENDIENTES
+// =========================
+
+const pendingTasks = allTasks.filter(task => {
+
+  if (task.completed) return false;
+
+  if (!task.dueDate) return true;
+
+  const taskDate = new Date(task.dueDate);
+  taskDate.setHours(0, 0, 0, 0);
+
+  return taskDate >= today;
+
+});
+
+// =========================
+// VENCIDAS
+// =========================
+
+const expiredTasks = allTasks.filter(task => {
+
+  if (task.completed) return false;
+
+  if (!task.dueDate) return false;
+
+  const taskDate = new Date(task.dueDate);
+  taskDate.setHours(0, 0, 0, 0);
+
+  return taskDate < today;
+
+});
+
+// =========================
+// COMPLETADAS
+// =========================
+
+const completedTasks = allTasks.filter(task =>
+  task.completed
+);
+
+// =========================
+// MANUALES
+// =========================
+
+const manualTasks = allTasks.filter(task =>
+  task.source !== "classroom"
+);
+
+console.log(allTasks);
+console.log("PENDING:", pendingTasks);
+console.log("EXPIRED:", expiredTasks);
+console.log("COMPLETED:", completedTasks);
 
 
   return (
@@ -306,75 +441,169 @@ console.log("ALL TASKS:", allTasks);
         {/* =========================
             LISTA DE TAREAS
         ========================= */}
-        <div className="tasks-section">
+        {/* =========================
+              PENDIENTES
+          ========================= */}
 
-          <div className="tasks-header">
+          <div className="tasks-section">
+
+            <div className="tasks-header">
 
               <div>
-                <h1>Mis Actividades</h1>
+
+                <h1>📚 Pendientes</h1>
 
                 <p>
-                  Gestiona tus tareas manuales y sincronizadas desde Classroom
+                  Actividades por realizar
                 </p>
+
               </div>
 
               <div className="tasks-stats">
 
                 <div className="stat-card">
+
                   <span>{allTasks.length}</span>
+
                   <p>Total</p>
+
                 </div>
 
                 <div className="stat-card">
-                  <span>
-                    {
-                      allTasks.filter(
-                        task => !task.completed
-                      ).length
-                    }
-                  </span>
+
+                  <span>{pendingTasks.length}</span>
 
                   <p>Pendientes</p>
+
                 </div>
 
               </div>
 
+            </div>
+
+            {pendingTasks.length === 0 ? (
+
+              <div className="empty-tasks">
+
+                <h3>
+                  No hay tareas pendientes
+                </h3>
+
+              </div>
+
+            ) : (
+
+              <div className="tasks-grid">
+
+                {pendingTasks.map(task => (
+
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onToggle={handleToggleTask}
+                    onDelete={handleDeleteTask}
+                  />
+
+                ))}
+
+              </div>
+
+            )}
+
+            {/* =========================
+                VENCIDAS
+            ========================= */}
+
+            {expiredTasks.length > 0 && (
+
+              <div className="expired-section">
+
+                <h2>
+                  ⏰ Tareas vencidas ({expiredTasks.length})
+                </h2>
+
+                <div className="tasks-grid">
+
+                  {expiredTasks.map(task => (
+
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onToggle={handleToggleTask}
+                      onDelete={handleDeleteTask}
+                    />
+
+                  ))}
+
+                </div>
+
+              </div>
+
+            )}
+
+            {/* =========================
+                COMPLETADAS
+            ========================= */}
+
+            {completedTasks.length > 0 && (
+
+              <div className="expired-section">
+
+                <h2>
+                  ✅ Completadas ({completedTasks.length})
+                </h2>
+
+                <div className="tasks-grid">
+
+                  {completedTasks.map(task => (
+
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onToggle={handleToggleTask}
+                      onDelete={handleDeleteTask}
+                    />
+
+                  ))}
+
+                </div>
+
+              </div>
+
+            )}
+
+            {/* =========================
+                MANUALES
+            ========================= */}
+
+            {manualTasks.length > 0 && (
+
+              <div className="expired-section">
+
+                <h2>
+                  📝 Tareas manuales ({manualTasks.length})
+                </h2>
+
+                <div className="tasks-grid">
+
+                  {manualTasks.map(task => (
+
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onToggle={handleToggleTask}
+                      onDelete={handleDeleteTask}
+                    />
+
+                  ))}
+
+                </div>
+
+              </div>
+
+            )}
+
           </div>
-
-          {allTasks.length === 0 ? (
-
-            <div className="empty-tasks">
-
-              <h3>
-                No hay tareas todavía
-              </h3>
-
-              <p>
-                Crea tu primera tarea para comenzar.
-              </p>
-
-            </div>
-
-          ) : (
-
-            <div className="tasks-grid">
-
-              {allTasks.map(task => (
-
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onToggle={handleToggleTask}
-                  onDelete={handleDeleteTask}
-                />
-
-              ))}
-
-            </div>
-
-          )}
-
-        </div>
 
       </div>
 

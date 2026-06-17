@@ -14,23 +14,22 @@ from "firebase/firestore";
 
 import { db } from "../firebase/firebase";
 
-import {
-  getCourseWork
-}
-from "./classroom";
-
-// ======================================
-// SINCRONIZAR CURSO
-// ======================================
+import { getCourseWork } from "../api/classroom";
 
 export const syncCourseTasks = async (
-
   course,
   token,
-  userId
-
+  userId,
+  selectedCourses
 ) => {
 
+  if (
+    selectedCourses.length > 0 &&
+    !selectedCourses.includes(course.id)
+  ) {
+    return;
+  }
+  
   // ==========================
   // OBTENER TAREAS
   // ==========================

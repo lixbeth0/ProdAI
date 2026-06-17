@@ -397,3 +397,176 @@ body.dark-theme {
   cursor: pointer;
   font-weight: 600;
 }
+
+/* =========================================
+   SETTINGS LAYOUT
+========================================= */
+
+.settings-container {
+
+  display: grid;
+
+  grid-template-columns:
+    280px 1fr;
+
+  gap: 24px;
+
+  padding: 30px;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.settings-sidebar {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  padding: 20px;
+
+  border-radius: 24px;
+
+  background: var(--bg-card);
+
+  border: 1px solid var(--border-color);
+}
+
+.settings-nav-btn {
+
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  background: transparent;
+
+  color: var(--text-primary);
+
+  transition: .25s;
+}
+
+.settings-nav-btn:hover {
+
+  background:
+    rgba(99,102,241,.08);
+}
+
+.settings-nav-btn.active {
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6
+    );
+
+  color: white;
+}
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.settings-content {
+
+  padding: 28px;
+
+  border-radius: 24px;
+
+  background: var(--bg-card);
+
+  border: 1px solid var(--border-color);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.settings-content h2 {
+
+  margin-top: 0;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.settings-content input,
+.settings-content select {
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  border: 1px solid var(--border-color);
+
+  background: var(--bg-main);
+
+  color: var(--text-primary);
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.settings-actions {
+
+  display: flex;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* =========================================
+   COURSES
+========================================= */
+
+.courses-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  max-height: 400px;
+
+  overflow-y: auto;
+}
+
+.course-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  background: var(--hover-bg);
+}
+
+.classroom-info {
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(99,102,241,.08);
+}

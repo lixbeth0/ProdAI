@@ -221,6 +221,10 @@
 .tasks-section {
   width: 100%;
   margin-top: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 /* =========================
@@ -417,4 +421,132 @@
     align-items: flex-start;
   }
 
+}
+
+/* =========================
+   SECCIÓN TAREAS VENCIDAS
+========================= */
+
+.expired-section {
+
+  margin-top: 30px;
+
+  padding: 28px;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.12),
+      rgba(220, 38, 38, 0.08)
+    );
+
+  border:
+    1px solid rgba(239, 68, 68, 0.18);
+
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   HEADER VENCIDAS
+========================= */
+
+.expired-section h2 {
+
+  margin: 0 0 22px 0;
+
+  font-size: 1.4rem;
+
+  font-weight: 700;
+
+  color: #fca5a5;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+/* =========================
+   GRID DE VENCIDAS
+========================= */
+
+.expired-section .tasks-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(320px, 1fr)
+    );
+
+  gap: 22px;
+}
+
+/* =========================
+   ANIMACIÓN SUAVE
+========================= */
+
+.expired-section {
+
+  animation:
+    fadeExpired 0.35s ease;
+}
+
+@keyframes fadeExpired {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(15px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+  }
+
+}
+
+/* =========================
+   BADGE EXTRA PARA FUTURO
+========================= */
+
+.expired-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+
+  font-weight: 600;
+
+  background:
+    rgba(239, 68, 68, 0.15);
+
+  color: #fca5a5;
+
+  border:
+    1px solid rgba(239, 68, 68, 0.25);
 }
