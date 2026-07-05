@@ -58,5 +58,11 @@ export const getStudentSubmissions = async (
     data
   );
 
+  console.log(
+    "SUBMISSIONS:",
+    courseWorkId,
+    data.studentSubmissions
+  );
+
   return data.studentSubmissions || [];
 };

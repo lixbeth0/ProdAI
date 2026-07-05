@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Login.css";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,12 @@ import { auth, db, getGoogleProvider } from "../../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 export default function Login() {
+
+
+useEffect(() => {
+  document.title = "Iniciar sesión | ProdAI";
+}, []);
+  
   const navigate = useNavigate();
 
   const [form, setForm] = useState({

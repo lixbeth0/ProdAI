@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Register.css";
 
 import logo from "../../assets/logo.png";
@@ -20,6 +20,11 @@ import {
 } from "firebase/firestore";
 
 function Register() {
+
+
+  useEffect(() => {
+    document.title = "Registro | ProdAI";
+  }, []);
 
   const navigate = useNavigate();
 

@@ -35,6 +35,10 @@ import "./SettingsPage.css";
 
 export default function SettingsPage() {
 
+useEffect(() => {
+  document.title = "Configuración | ProdAI";
+}, []);
+
   const { user } = useAuth();
 
   // =========================
@@ -111,7 +115,7 @@ export default function SettingsPage() {
         resumenDiario: false
       });
 
-      setTema(data.tema || "light");
+      setTema(data.tema || "");
 
       setClassroomConnected(!!data.classroomToken);
       setClassroomEmail(data.classroomEmail || "");
@@ -245,9 +249,22 @@ export default function SettingsPage() {
       "dark-theme",
       tema === "dark"
     );
-
-    alert("Tema actualizado");
   };
+
+  // =========================================================
+  // APLICAR TEMA AUTOMÁTICAMENTE
+  // =========================================================
+
+  useEffect(() => {
+
+    if (!tema) return;
+
+    document.body.classList.toggle(
+      "dark-theme",
+      tema === "dark"
+    );
+
+  }, [tema]);
 
   // =========================================================
   // NOTIFICACIONES

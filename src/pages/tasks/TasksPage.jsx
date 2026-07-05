@@ -24,39 +24,55 @@ import TaskCard from "../../components/tasks/TaskCard";
 
 function TasksPage() {
 
+useEffect(() => {
+  document.title = "Tareas | ProdAI";
+}, []);
 
-  // =========================
-  // TAREAS
-  // =========================
-  const { tasks } = useTasks();
-console.log(tasks[0]);
-  // =========================
-  // MATERIAS SELECCIONADAS
-  // =========================
-  const [selectedCourses, setSelectedCourses] =
-    useState([]);
+// =========================
+// TAREAS
+// =========================
 
-  // =========================
-  // FORM STATE
-  // =========================
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [subject, setSubject] = useState("");
-  const [priority, setPriority] = useState("Media");
-  const [dueDate, setDueDate] = useState("");
-  const [dueTime, setDueTime] = useState("");
+const { tasks } = useTasks();
 
-  const [creating, setCreating] = useState(false);
-  const [error, setError] = useState("");
+// =========================
+// MATERIAS SELECCIONADAS
+// =========================
 
-  // =========================
-  // CARGAR CONFIGURACIÓN
-  // =========================
-  useEffect(() => {
+const [selectedCourses, setSelectedCourses] =
+  useState([]);
 
-    const loadSettings = async () => {
+// =========================
+// FORM STATE
+// =========================
 
-      if (!auth.currentUser) return;
+const [title, setTitle] = useState("");
+const [description, setDescription] =
+  useState("");
+const [subject, setSubject] = useState("");
+const [priority, setPriority] =
+  useState("Media");
+const [dueDate, setDueDate] =
+  useState("");
+const [dueTime, setDueTime] =
+  useState("");
+
+const [creating, setCreating] =
+  useState(false);
+
+const [error, setError] =
+  useState("");
+
+// =========================
+// CARGAR CONFIGURACIÓN
+// =========================
+
+useEffect(() => {
+
+  const loadSettings = async () => {
+
+    if (!auth.currentUser) return;
+
+    try {
 
       const snap = await getDoc(
         doc(
@@ -74,197 +90,308 @@ console.log(tasks[0]);
         data.selectedCourses || []
       );
 
-    };
+    } catch (error) {
 
-    loadSettings();
+      console.error(
+        "Error cargando configuración:",
+        error
+      );
 
-  }, []);
+    }
 
-  // =========================
-  // FILTRO DE TAREAS
-  // =========================
-  const allTasks = tasks.filter(task => {
+  };
 
-    console.log("SELECTED COURSES:", selectedCourses);
+  loadSettings();
 
-    const classroomTasks = tasks.filter(
-      t => t.source === "classroom"
+}, []);
+
+// =========================
+// FILTRAR TAREAS
+// =========================
+
+const allTasks = tasks.filter(task => {
+
+  // tareas manuales
+  if (task.source !== "classroom") {
+    return true;
+  }
+
+  // mostrar todas si no hay filtro
+  if (selectedCourses.length === 0) {
+    return true;
+  }
+
+  // mostrar solo cursos elegidos
+  return selectedCourses.includes(
+    task.courseId
+  );
+
+});
+
+// =========================
+// MATERIAS DISPONIBLES
+// =========================
+
+const subjects = [
+  ...new Set(
+    allTasks
+      .map(task => task.subject)
+      .filter(Boolean)
+  )
+];
+
+// =========================
+// CREAR TAREA
+// =========================
+
+const handleCreateTask = async () => {
+
+  setError("");
+
+  if (!title.trim()) {
+
+    setError(
+      "El título es obligatorio"
     );
+
+    return;
+  }
+
+  if (!auth.currentUser) {
+
+    setError(
+      "Debes iniciar sesión"
+    );
+
+    return;
+  }
+
+  try {
+
+    setCreating(true);
+
+    await createTask({
+
+      title,
+      description,
+      subject,
+      priority,
+      dueDate,
+      dueTime,
+
+      userId:
+        auth.currentUser.uid
+
+    });
+
+    // limpiar formulario
+
+    setTitle("");
+    setDescription("");
+    setSubject("");
+    setPriority("Media");
+    setDueDate("");
+    setDueTime("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    setError(
+      "Error al crear la tarea"
+    );
+
+  } finally {
+
+    setCreating(false);
+
+  }
+
+};
+
+// =========================
+// COMPLETAR TAREA
+// =========================
+//
+// Classroom se sincroniza
+// automáticamente.
+// Solo permitimos marcar
+// tareas manuales.
+//
+
+const handleToggleTask = async (
+  taskId,
+  completed
+) => {
+
+  const task =
+    tasks.find(
+      t => t.id === taskId
+    );
+
+  if (
+    task?.source === "classroom"
+  ) {
 
     console.log(
-      "PRIMERA TAREA CLASSROOM:",
-      classroomTasks[0]
+      "Las tareas de Classroom se actualizan automáticamente"
     );
 
-    if (task.source !== "classroom") {
-      return true;
-    }
+    return;
+  }
 
-    if (selectedCourses.length === 0) {
-      return true;
-    }
-
-    return selectedCourses.includes(
-      task.courseId
-    );
-
-  });
-
-  // =========================
-  // MATERIAS ÚNICAS
-  // (manuales + classroom)
-  // =========================
-  const subjects = [
-    ...new Set(
-      allTasks
-        .map(t => t.subject)
-        .filter(Boolean)
-    )
-  ];
-
-  // =========================
-  // CREAR TAREA
-  // =========================
-  const handleCreateTask = async () => {
-
-
-console.log("TASKS:", tasks);
-console.log("ALL TASKS:", allTasks);  
-
-    setError("");
-
-    if (!title.trim()) {
-      setError("El título es obligatorio");
-      return;
-    }
-
-    if (!auth.currentUser) {
-      setError("Debes iniciar sesión");
-      return;
-    }
-
-    try {
-
-      setCreating(true);
-
-      await createTask({
-        title,
-        description,
-        subject,
-        priority,
-        dueDate,
-        dueTime,
-        userId: auth.currentUser.uid
-      });
-
-      // limpiar formulario
-      setTitle("");
-      setDescription("");
-      setSubject("");
-      setPriority("Media");
-      setDueDate("");
-      setDueTime("");
-
-    } catch (err) {
-
-      console.error(err);
-      setError("Error al crear la tarea");
-
-    } finally {
-
-      setCreating(false);
-
-    }
-  };
-
-  // =========================
-  // COMPLETAR TAREA
-  // =========================
-  const handleToggleTask = async (
+  await toggleTask(
     taskId,
     completed
-  ) => {
+  );
 
-    await toggleTask(
-      taskId,
-      completed
-    );
+};
 
-  };
+// =========================
+// ELIMINAR TAREA
+// =========================
 
-  // =========================
-  // ELIMINAR TAREA
-  // =========================
-  const handleDeleteTask = async (
-    taskId
-  ) => {
+const handleDeleteTask = async (
+  taskId
+) => {
 
-    await deleteTask(taskId);
+  await deleteTask(taskId);
 
-  };
-  
+};
+
 // =========================
 // FECHA ACTUAL
 // =========================
 
 const today = new Date();
-today.setHours(0, 0, 0, 0);
+
+today.setHours(
+  0,
+  0,
+  0,
+  0
+);
 
 // =========================
 // PENDIENTES
 // =========================
 
-const pendingTasks = allTasks.filter(task => {
+const pendingTasks =
+  allTasks.filter(task => {
 
-  if (task.completed) return false;
+    if (task.completed)
+      return false;
 
-  if (!task.dueDate) return true;
+    if (!task.dueDate)
+      return true;
 
-  const taskDate = new Date(task.dueDate);
-  taskDate.setHours(0, 0, 0, 0);
+    const taskDate =
+      new Date(task.dueDate);
 
-  return taskDate >= today;
+    taskDate.setHours(
+      0,
+      0,
+      0,
+      0
+    );
 
-});
+    return taskDate >= today;
+
+  });
 
 // =========================
 // VENCIDAS
 // =========================
 
-const expiredTasks = allTasks.filter(task => {
+const expiredTasks =
+  allTasks.filter(task => {
 
-  if (task.completed) return false;
+    if (task.completed)
+      return false;
 
-  if (!task.dueDate) return false;
+    if (!task.dueDate)
+      return false;
 
-  const taskDate = new Date(task.dueDate);
-  taskDate.setHours(0, 0, 0, 0);
+    const taskDate =
+      new Date(task.dueDate);
 
-  return taskDate < today;
+    taskDate.setHours(
+      0,
+      0,
+      0,
+      0
+    );
 
-});
+    return taskDate < today;
+
+  });
 
 // =========================
 // COMPLETADAS
 // =========================
 
-const completedTasks = allTasks.filter(task =>
-  task.completed
-);
+const completedTasks =
+  allTasks.filter(
+    task => task.completed
+  );
 
 // =========================
 // MANUALES
 // =========================
 
-const manualTasks = allTasks.filter(task =>
-  task.source !== "classroom"
+const manualTasks =
+  allTasks.filter(
+    task =>
+      task.source !==
+      "classroom"
+  );
+
+// =========================
+// DEBUG
+// =========================
+
+useEffect(() => {
+
+  console.log(
+    "TOTAL TASKS:",
+    allTasks.length
+  );
+
+  console.log(
+    "PENDING:",
+    pendingTasks
+  );
+
+  console.log(
+    "EXPIRED:",
+    expiredTasks
+  );
+
+  console.log(
+    "COMPLETED:",
+    completedTasks
+  );
+
+  console.log(
+    "CLASSROOM COMPLETED:",
+    tasks.filter(
+      task =>
+        task.source ===
+          "classroom" &&
+        task.completed
+    )
+  );
+
+}, [tasks]);
+
+console.log(
+  tasks.map(task => ({
+    title: task.title,
+    completed: task.completed,
+    source: task.source,
+    dueDate: task.dueDate
+  }))
 );
-
-console.log(allTasks);
-console.log("PENDING:", pendingTasks);
-console.log("EXPIRED:", expiredTasks);
-console.log("COMPLETED:", completedTasks);
-
 
   return (
 
@@ -519,7 +646,7 @@ console.log("COMPLETED:", completedTasks);
               <div className="expired-section">
 
                 <h2>
-                  ⏰ Tareas vencidas ({expiredTasks.length})
+                  ⏰ Tareas pasadas ({expiredTasks.length})
                 </h2>
 
                 <div className="tasks-grid">

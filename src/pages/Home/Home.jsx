@@ -20,17 +20,16 @@ import { syncClassroom } from "../../services/syncClassroomService";
 function Home() {
 const todayDate = new Date();
 todayDate.setHours(0, 0, 0, 0);
-
-
+const { tasks } = useTasks();
 const { userData } = useUserData();
 
-const { tasks } = useTasks();
-
-// PRIMERO DECLARAS EL STATE
 const [selectedCourses, setSelectedCourses] =
   useState([]);
 
-// DESPUÉS EL useEffect
+useEffect(() => {
+  document.title = "Inicio | ProdAI";
+}, []);
+
 useEffect(() => {
 
   if (!userData) return;
@@ -41,7 +40,6 @@ useEffect(() => {
 
 }, [userData]);
 
-// DESPUÉS EL FILTRO
 const filteredTasks = tasks.filter(task => {
 
   if (task.source !== "classroom") {
@@ -81,22 +79,6 @@ const activeTasks = filteredTasks.filter(task => {
 
   const navigate = useNavigate();
 
-
-  // =========================================
-  // DEBUG (PUEDES ELIMINARLO DESPUÉS)
-  // =========================================
-
-  useEffect(() => {
-
-    console.log("USER DATA:", userData);
-
-    console.log(
-      "CLASSROOM TOKEN:",
-      userData?.classroomToken
-    );
-
-  }, [userData]);
-
   // =========================================
   // MENÚ PERFIL
   // =========================================
@@ -111,41 +93,79 @@ const activeTasks = filteredTasks.filter(task => {
   const today =
     new Date().toISOString().split("T")[0];
 
-  // =========================================
-  // ESTADÍSTICAS
-  // =========================================
+ // =========================================
+// ESTADÍSTICAS
+// =========================================
 
-  const completedTasks = useMemo(
-    () =>
-      activeTasks.filter(task => task.completed)
-        .length,
-    [activeTasks]
+// Tareas completadas
+const completedTasks = useMemo(
+  () =>
+    activeTasks.filter(
+      task => task.completed
+    ).length,
+  [activeTasks]
+);
+
+// Tareas pendientes
+const pendingTasks = useMemo(
+  () =>
+    activeTasks.filter(
+      task => !task.completed
+    ).length,
+  [activeTasks]
+);
+
+// Tareas de alta prioridad pendientes
+const highPriorityTasks = useMemo(
+  () =>
+    activeTasks.filter(
+      task =>
+        task.priority === "Alta" &&
+        !task.completed
+    ).length,
+  [activeTasks]
+);
+
+// =========================================
+// MATERIAS ACTIVAS
+// =========================================
+//
+// Se obtienen directamente de las materias
+// seleccionadas por el usuario en Classroom.
+//
+// Esto evita depender de las tareas,
+// ya que puede haber materias sin tareas.
+//
+const subjectsCount = useMemo(() => {
+
+  return (
+    userData?.selectedCourses?.length || 0
   );
 
-  const pendingTasks = useMemo(
-    () =>
-      activeTasks.filter(task => !task.completed)
-        .length,
-    [activeTasks]
+}, [userData]);
+
+// =========================================
+// DEBUG CLASSROOM
+// =========================================
+
+useEffect(() => {
+
+  console.log(
+    "USER DATA:",
+    userData
   );
 
-  const highPriorityTasks = useMemo(
-    () =>
-      activeTasks.filter(
-        task =>
-          task.priority === "Alta" &&
-          !task.completed
-      ).length,
-    [activeTasks]
+  console.log(
+    "SELECTED COURSES:",
+    userData?.selectedCourses
   );
 
-  const subjectsCount = useMemo(
-    () =>
-      new Set(
-        activeTasks.map(task => task.subject)
-      ).size,
-    [activeTasks]
+  console.log(
+    "TOTAL MATERIAS:",
+    userData?.selectedCourses?.length || 0
   );
+
+}, [userData]);
 
   // =========================================
   // TAREAS DE HOY

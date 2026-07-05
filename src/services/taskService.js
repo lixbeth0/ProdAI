@@ -86,8 +86,6 @@ if (
 
         ...taskData,
 
-        completed: false,
-
         createdAt: serverTimestamp()
       }
     );
